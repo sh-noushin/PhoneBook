@@ -1,0 +1,72 @@
+<form #formControl="ngForm" (ngSubmit)="onSubmit(formControl.value)" style="align-items: center; margin-left: 300px;">
+
+
+  <div class="form">
+    <mat-form-field color="accent">
+      <input matInput #input class="form-control" placeholder=" Name" required type="text"
+        [(ngModel)]="newContact.name" name="name" (click)="setNameError()">
+        <div style="color: red; margin-top: 20px; margin-bottom: 20px;" *ngIf="(errorDivName) && (!formControl.valid)" >
+          Contact Name must be entered.
+        </div>
+
+    </mat-form-field>
+  </div>
+  <div class="form" style="margin-top: 20px;">
+    <mat-form-field color="accent">
+      <input matInput #input class="form-control" placeholder="Last Name" required  type="text"
+        [(ngModel)]="newContact.lName" name="lName"  (click)="setLNameError()">
+        <div style="color: red; margin-top: 20px; margin-bottom: 20px;" *ngIf="(errorDivLName) && (!formControl.valid)" >
+          Contact Last Name must be entered.
+        </div>
+    </mat-form-field>
+  </div>
+
+  <mat-label  style="margin-top: 15px;"> Gender</mat-label>
+  <div class="form" >
+    <mat-form-field color="accent"  style="margin-top: 30px;">
+    <select matNativeControl name="selectgender" (ngModelChange)="setSelectedGender($event)" [(ngModel)]="newContact.gender" >
+      <option [ngValue]="null" disabled selected>Choose a Gender</option>
+
+      <option value="Man" selected>Man</option>
+      <option value="Woman" >Woman</option>
+      
+    </select>
+  </mat-form-field>
+</div>
+
+    <div class="form"  style="margin-top: 20px;">
+      
+      <mat-form-field color="accent">
+        <input matInput #input class="form-control"
+         placeholder="Phone Number"  type="text"
+          [(ngModel)]="newContact.phoneNumber" 
+          pattern="^\+?\d{1,3}[\s]\(?\d{2,5}\)?[\s]\d{3,15}$"
+           name="phone" (click)="checkPhone()">
+  
+      </mat-form-field>
+    </div>
+
+    <mat-label  style="margin-top: 15px;" style="margin-top: 30px;"> Manager</mat-label>
+
+    <div >
+
+    <select matNativeControl name="selectmanager" (ngModelChange)="setSelectedManager($event)"  [(ngModel)]="newContact.directBossId" >
+      <option [ngValue]="null" disabled selected>Choose a Manager</option>
+      <option *ngFor="let x of members " [value]="x.id" required>
+        {{x.fullName}}</option>
+            
+    </select>
+   
+  </div>
+  
+  <div mat-dialog-actions>
+    <button class="m-3" mat-raised-button color="primary" type="submit"  [disabled]="!formControl.valid" style="margin-top: 15px;">Save</button>
+    <div style="color: red; margin-top: 20px; margin-bottom: 20px;" *ngIf="(!formControl.valid)"  >
+      <p>Phone Numebr must be entered in these formats:<p>
+      <p>(counry code , space , area code[2-5 digits], space ,phone number[3-15 digits] )</p>
+      <p>+48 312 23456789</p>
+      +1 (425) 545457889
+    </div>
+  </div>
+
+</form>
