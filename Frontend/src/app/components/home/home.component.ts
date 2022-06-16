@@ -64,28 +64,12 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
 
 
-    this.getAllContacts();
+    this.getContactsAnyFilter();
     this.dataSource.sort = this.sorting;
 
   }
 
-  getAllContacts() {
-
-
-
-    this.service.getAllContacts(this.skipCount, this.pageSize, this.sortingElement).subscribe(data => {
-
-      console.log(data);
-      this.totalRows = data.totalCount;
-      this.dataSource = new MatTableDataSource(data.items);
-
-    }
-
-    );
-
-
-  }
-
+  
   getContactsAnyFilter() {
 
     this.service.getContactWithAnyFilter(this.filterText, this.skipCount, this.pageSize, this.sortingElement).subscribe(data => {
@@ -102,14 +86,13 @@ export class HomeComponent implements OnInit {
 
   getContactsWithSpecificFilter() {
 
-    console.log(this.filter);
+     console.log(this.filter);
     this.service.getContactWithSpecificFilter(this.filter, this.skipCount, this.pageSize, this.sortingElement).subscribe(data => {
 
       console.log(data);
       this.totalRows = data.totalCount;
       this.dataSource = new MatTableDataSource(data.items);
       
-
     }
 
     );
@@ -120,7 +103,7 @@ export class HomeComponent implements OnInit {
 
     this.service.selectedRow = contact.id;
     this.router.navigate(["/editcontact"]);
-    this.getAllContacts();
+    this.getContactsAnyFilter();
     
   }
 
@@ -129,7 +112,7 @@ export class HomeComponent implements OnInit {
     if (confirm('Are you sure to delete?')) {
       this.service.deleteContact(id).subscribe(res => {
 
-        this.getAllContacts();
+        this.getContactsAnyFilter();
 
       })
 
@@ -153,16 +136,24 @@ export class HomeComponent implements OnInit {
   }
   applyFilterName(event: Event) {
     this.filter.name = (event.target as HTMLInputElement).value;
+    this.name = (event.target as HTMLInputElement).value;
+
     this.getContactsWithSpecificFilter();
 
   }
   applyFilterLName(event: Event) {
     this.filter.lName = (event.target as HTMLInputElement).value;
+    this.lName = (event.target as HTMLInputElement).value;
+
     this.getContactsWithSpecificFilter();
 
   }
   applyFilterTeam(event: Event) {
     this.filter.teamName = (event.target as HTMLInputElement).value;
+    this.teamName = (event.target as HTMLInputElement).value;
+
+    this.name = (event.target as HTMLInputElement).value;
+
     this.getContactsWithSpecificFilter();
 
   }
@@ -179,7 +170,7 @@ export class HomeComponent implements OnInit {
 
     }
     this.skipCount = this.currentPage * this.pageSize;
-    this.getAllContacts();
+    this.getContactsAnyFilter();
   }
 
   onAdd() {

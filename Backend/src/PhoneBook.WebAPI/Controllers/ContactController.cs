@@ -48,7 +48,7 @@ namespace PhoneBook.WebAPI.Controllers
         [HttpGet("details")]
 
         public async Task<PagedResultResponse<ContactWithDetailsResponse>> GetAllWithDetailsAsync([FromQuery] GetContactsWithDetailsRequest input)
-        {
+         {
             return await _contactService.GetAllWithDetailsAsync(input);
 
         }

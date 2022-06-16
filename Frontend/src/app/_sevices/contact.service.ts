@@ -15,32 +15,58 @@ export class ContactService {
   readonly APIUrl = 'https://localhost:7279/';
   selectedRow : number = 0;
 
-  
-
-  getAllContacts(skipCount: number, maxResultCount: number, sorting: string): Observable<any> {
     
+  getContactWithAnyFilter(filterText: string, skipCount: number, maxResultCount: number, sorting: string): Observable<any> {
+    console.log("filterText is " + filterText);
+    if(this.isEmptyOrSpaces(filterText))
+    {
+      return this.http.get<any>(this.APIUrl + 'Contact/details?SkipCount=' +
+    skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
+    }
+
+    return this.http.get<any>(this.APIUrl + 'Contact/details?AnyFilter=' + filterText + '&SkipCount=' +
+    skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
+      
+  }
+
+  
+  getContactWithSpecificFilter(filter: ContactWithDetailsFilter, skipCount: number, maxResultCount: number, sorting: string): Observable<any> {
+        
+         
+    if(!this.isEmptyOrSpaces(filter.name) && this.isEmptyOrSpaces(filter.lName) && this.isEmptyOrSpaces(filter.teamName))
+    {
+      return this.http.get<any>(this.APIUrl + 'Contact/details?Name=' + filter.name + '&SkipCount=' +
+      skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
+    }
+    if(!this.isEmptyOrSpaces(filter.name) && !this.isEmptyOrSpaces(filter.lName) && this.isEmptyOrSpaces(filter.teamName))
+    {
+      return this.http.get<any>(this.APIUrl + 'Contact/details?Name=' + filter.name + 
+    '&LName=' + filter.lName + '&SkipCount=' + skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
+    }
+    if(!this.isEmptyOrSpaces(filter.name) && !this.isEmptyOrSpaces(filter.lName) && !this.isEmptyOrSpaces(filter.teamName))
+    {
+      return this.http.get<any>(this.APIUrl + 'Contact/details?Name=' + filter.name + 
+      '&LName=' + filter.lName + '&TeamName=' + filter.teamName + '&SkipCount=' +
+      skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
+    }
+    if(!this.isEmptyOrSpaces(filter.name) && this.isEmptyOrSpaces(filter.lName) && !this.isEmptyOrSpaces(filter.teamName))
+    {
+      return this.http.get<any>(this.APIUrl + 'Contact/details?Name=' + filter.name 
+      +'&TeamName=' + filter.teamName + '&SkipCount=' +
+      skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
+    }
+
+    if(this.isEmptyOrSpaces(filter.name) && !this.isEmptyOrSpaces(filter.lName) && !this.isEmptyOrSpaces(filter.teamName))
+    {
+      return this.http.get<any>(this.APIUrl + 'Contact/details?LName=' + filter.lName 
+      +'&TeamName=' + filter.teamName + '&SkipCount=' +
+      skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
+    }
+
     return this.http.get<any>(this.APIUrl + 'Contact/details/anyfilter?SkipCount=' +
     skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
       
-  }
-  getContactWithAnyFilter(filterText: string, skipCount: number, maxResultCount: number, sorting: string): Observable<any> {
-    
-    return this.http.get<any>(this.APIUrl + 'Contact/details/anyfilter?FilterText=' + filterText + '&SkipCount=' +
-    skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
-      
-  }
-
-  getContactWithSpecificFilter(filter: ContactWithDetailsFilter, skipCount: number, maxResultCount: number, sorting: string): Observable<any> {
-    
-    // return this.http.get<any>(this.APIUrl + 'Contact/details?Name=' + filter.name +'&LName=' +filter.lName+ '&TeamName' +filter.teamName+ '&SkipCount=' +
-    // skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
-    // return this.http.get<any>(this.APIUrl + 'Contact/details?Name=' + filter.name + '&SkipCount=' +
-    // skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
-    return this.http.get<any>(this.APIUrl + 'Contact/details?Name=' + filter.name + 
-    '&LName=' + filter.lName + '&TeamName=' + filter.teamName + '&SkipCount=' +
-    skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
-  
-
+   
   }
 
   
@@ -72,4 +98,7 @@ export class ContactService {
    
   }
 
+   isEmptyOrSpaces(str : string){
+    return str === null || str.match(/^ *$/) !== null;
+}
 }

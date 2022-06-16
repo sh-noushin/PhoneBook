@@ -15,5 +15,7 @@ namespace PhoneBook.Application.Contract.Contacts.DTOs.Requests
         public Gender Gender { get; set; }
         public string PhoneNumber { get; set; }
         public int DirectBossId { get; set; }
+
+        
     }
 }
