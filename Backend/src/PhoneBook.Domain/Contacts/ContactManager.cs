@@ -1,4 +1,5 @@
 ﻿using PhoneBook.Domain.Contacts.Exceptions;
+using PhoneBook.Domain.Helpers;
 using PhoneBook.Domain.Shared.Enums;
 using PhoneBook.Domain.TeamMembers;
 using System;
@@ -14,10 +15,12 @@ namespace PhoneBook.Domain.Contacts
 
         private readonly IContactRepository _contactRepository;
         private readonly ITeamMemberRepository _teamMemberRepository;
-        public ContactManager(IContactRepository repo, ITeamMemberRepository teamRepo)
+        private readonly IPhoneValidator _phoneValidator;
+        public ContactManager(IContactRepository repo, ITeamMemberRepository teamRepo, IPhoneValidator phoneValidator)
         {
             _contactRepository = repo;
-            _teamMemberRepository = teamRepo;   
+            _teamMemberRepository = teamRepo;
+            _phoneValidator = phoneValidator;
         }
         public async Task<Contact> CreateAsync(string name, string lname,Gender gender, string phone, int bossId)
         {
@@ -33,6 +36,8 @@ namespace PhoneBook.Domain.Contacts
             {
                 throw new ContactNameIsNullOrWhiteSpaceException();
             }
+
+            _phoneValidator.ValidatePhoneNumber(phone);
             var contact = new Contact(name, lname, gender, phone, bossId);
             return contact;
         }
@@ -43,7 +48,7 @@ namespace PhoneBook.Domain.Contacts
             {
                 throw new ContactAlreadyExistsException(name, lname);
             }
-
+            _phoneValidator.ValidatePhoneNumber(phone);
             input.SetNameAndLname(name, lname);
             input.Gender = gender;
             input.PhoneNumber = phone;

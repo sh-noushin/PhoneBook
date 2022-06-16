@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PhoneBook.Application.Contract.Contacts
+namespace PhoneBook.Domain.Helpers
 {
-    public interface IPhoneValidationService
+    public interface IPhoneValidator
     {
-        bool IsValidPhone(string phone);
+        void ValidatePhoneNumber(string phone);
     }
 }

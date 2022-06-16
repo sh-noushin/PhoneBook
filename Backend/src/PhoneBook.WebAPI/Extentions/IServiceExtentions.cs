@@ -5,6 +5,7 @@ using PhoneBook.Application.Contract.Teams;
 using PhoneBook.Application.TeamMembers;
 using PhoneBook.Application.Teams;
 using PhoneBook.Domain.Contacts;
+using PhoneBook.Domain.Helpers;
 using PhoneBook.Domain.TeamMembers;
 using PhoneBook.Domain.Teams;
 using PhoneBook.EntityFrameworkCore.Contacts;
@@ -29,7 +30,7 @@ namespace PhoneBook.WebAPI.Extentions
             services.AddScoped<IContactManager, ContactManager>();
             services.AddScoped<IContactRepository, ContactRepository>();
 
-            services.AddScoped<IPhoneValidationService, PhoneValidationService>();
+            services.AddSingleton<IPhoneValidator, PhoneValidator>();
 
 
             services.AddAutoMapper(typeof(PhoneBook.Application.Contacts.ContactsMappingProfile).Assembly);

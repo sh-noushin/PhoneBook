@@ -7,25 +7,24 @@ using PhoneBook.Domain.Contacts;
 using PhoneBook.Domain.Contacts.Exceptions;
 using PhoneBook.Domain.Contacts.Filters;
 using PhoneBook.Domain.Contacts.Views;
-
+using PhoneBook.Domain.Helpers;
 
 namespace PhoneBook.Application.Contacts
 {
 
-    public class ContactService : IContactService 
+    public class ContactService : IContactService
     {
 
         private readonly IContactRepository _contactRepository;
         private readonly IContactManager _contactManager;
-        private readonly IPhoneValidationService _phoneValidationService;
         private readonly IMapper _mapper;
 
-        public ContactService(IContactRepository contactepository, IContactManager contactManager, IMapper mapper, IPhoneValidationService phoneserives)
+        public ContactService(IContactRepository contactepository, IContactManager contactManager, IMapper mapper)
         {
             _contactRepository = contactepository;
             _contactManager = contactManager;
             _mapper = mapper;
-            _phoneValidationService = phoneserives; 
+
 
         }
 
@@ -35,15 +34,12 @@ namespace PhoneBook.Application.Contacts
         }
         public async Task CreateAsync(ContactCreateRequest input)
         {
-            var x =  _phoneValidationService.IsValidPhone(input.PhoneNumber);
-            if (x!= false )
+            var contact = await _contactManager.CreateAsync(input.Name, input.LName, input.Gender, input.PhoneNumber, input.DirectBossId);
+            if (contact != null)
             {
-                var contact = await _contactManager.CreateAsync(input.Name, input.LName, input.Gender, input.PhoneNumber, input.DirectBossId);
-                if (contact != null)
-                {
-                    await _contactRepository.CreateAsync(contact);
-                }
+                await _contactRepository.CreateAsync(contact);
             }
+
         }
 
         public async Task DeleteAsync(int id)
@@ -71,7 +67,7 @@ namespace PhoneBook.Application.Contacts
         {
             var filter = new ContactWithDetailsFilter
             {
-                AnyFilter= input.AnyFilter,
+                AnyFilter = input.AnyFilter,
                 Name = input.Name,
                 LName = input.LName,
                 PhoneNumber = input.PhoneNumber,
