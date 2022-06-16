@@ -18,7 +18,7 @@ selectedGender : number =0;
 selectedTeamMember : number = 0;
 errorDivName: boolean = false;
 errorDivLName: boolean = false;
-errorDivPhone: boolean = true;
+errorDivPhone: boolean = false;
 
 
   constructor(private service :ContactService,
@@ -89,15 +89,15 @@ errorDivPhone: boolean = true;
   }
   setNameError(){
 
-    this.errorDivName =! this.errorDivName;
+    this.errorDivName =true;
   }
   setLNameError(){
 
-    this.errorDivLName =! this.errorDivLName;
+    this.errorDivLName =true;
   }
   checkPhone()
   {
 
-    this.errorDivPhone = !this.errorDivPhone;
+    this.errorDivPhone = true;
   }
 }
