@@ -12,8 +12,8 @@ import { AddcontactComponent } from './components/addcontact/addcontact.componen
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EditcontactComponent } from './components/editcontact/editcontact.component';
 import {MatPaginatorModule} from '@angular/material/paginator';
-
-
+import {MatButtonModule} from '@angular/material/button';
+import {MatSortModule} from '@angular/material/sort';
 
 
 
@@ -34,7 +34,9 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatButtonModule,
+    MatSortModule
    
 
 

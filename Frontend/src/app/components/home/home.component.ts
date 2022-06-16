@@ -1,12 +1,10 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { AfterViewInit, Component, ViewChild, OnInit } from '@angular/core';
-import { MatSort, Sort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, Sort } from '@angular/material/sort';import { MatTableDataSource } from '@angular/material/table';
 import { ContactService } from 'src/app/_sevices/contact.service';
 import { Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { ContactWithDetailsFilter } from 'src/app/_models/contactwithdetailsfilter';
-import { Gender } from 'src/app/_models/gender';
 
 
 
@@ -19,9 +17,9 @@ import { Gender } from 'src/app/_models/gender';
 
 export class HomeComponent implements OnInit {
 
-  displayedColumns: string[] = ['Id', 'Name', 'Last Name', 'Gender', 'Phone Number', 'Team', 'Manager', 'Options'];
+  displayedColumns: string[] = ['Id', 'Name', 'LName', 'Gender', 'PhoneNumber', 'TeamName', 'DirectBossFullName', 'Options'];
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
-
+  filterIsActiv: boolean = false;
   skipCount = 0;
   totalRows = 0;
   pageSize = 5;
@@ -46,6 +44,7 @@ export class HomeComponent implements OnInit {
 
 
   @ViewChild('paginator') paginator!: MatPaginator;
+  @ViewChild(MatSort) sorting = new MatSort();
 
   constructor(private _liveAnnouncer: LiveAnnouncer,
     private service: ContactService,
@@ -54,7 +53,6 @@ export class HomeComponent implements OnInit {
 
   }
 
-  @ViewChild(MatSort) sorting = new MatSort();
 
   ngAfterViewInit() {
 
@@ -69,7 +67,7 @@ export class HomeComponent implements OnInit {
 
   }
 
-  
+
   getContactsAnyFilter() {
 
     this.service.getContactWithAnyFilter(this.filterText, this.skipCount, this.pageSize, this.sortingElement).subscribe(data => {
@@ -86,13 +84,13 @@ export class HomeComponent implements OnInit {
 
   getContactsWithSpecificFilter() {
 
-     console.log(this.filter);
+    console.log(this.filter);
     this.service.getContactWithSpecificFilter(this.filter, this.skipCount, this.pageSize, this.sortingElement).subscribe(data => {
 
       console.log(data);
       this.totalRows = data.totalCount;
       this.dataSource = new MatTableDataSource(data.items);
-      
+
     }
 
     );
@@ -104,7 +102,7 @@ export class HomeComponent implements OnInit {
     this.service.selectedRow = contact.id;
     this.router.navigate(["/editcontact"]);
     this.getContactsAnyFilter();
-    
+
   }
 
 
@@ -124,38 +122,55 @@ export class HomeComponent implements OnInit {
 
     if (sortState.direction) {
       this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+      this.sortingElement = sortState.active + ' ' + sortState.direction;
+      this.paginator.pageIndex = 0;
+      this.currentPage = this.paginator.pageIndex;
+
+      this.pageSize = this.paginator.pageSize;
+      this.skipCount = this.currentPage * this.pageSize;
+      this.paginator.firstPage();
+      this.getContactsAnyFilter();
+
     } else {
       this._liveAnnouncer.announce('Sorting cleared');
     }
   }
 
   applyFilter(event: Event) {
+
+    this.showOrHideClearFilterBtn();
     this.filterText = (event.target as HTMLInputElement).value;
     this.getContactsAnyFilter();
 
   }
   applyFilterName(event: Event) {
+
+
     this.filter.name = (event.target as HTMLInputElement).value;
     this.name = (event.target as HTMLInputElement).value;
 
     this.getContactsWithSpecificFilter();
-
+    this.showOrHideClearFilterBtn();
   }
   applyFilterLName(event: Event) {
+
+
     this.filter.lName = (event.target as HTMLInputElement).value;
     this.lName = (event.target as HTMLInputElement).value;
 
     this.getContactsWithSpecificFilter();
-
+    this.showOrHideClearFilterBtn();
   }
   applyFilterTeam(event: Event) {
+
+
     this.filter.teamName = (event.target as HTMLInputElement).value;
     this.teamName = (event.target as HTMLInputElement).value;
 
     this.name = (event.target as HTMLInputElement).value;
 
     this.getContactsWithSpecificFilter();
-
+    this.showOrHideClearFilterBtn();
   }
 
   pageChanged(event: any) {
@@ -173,8 +188,25 @@ export class HomeComponent implements OnInit {
     this.getContactsAnyFilter();
   }
 
-  onAdd() {
+  showOrHideClearFilterBtn() {
+    if (this.filter.name || this.filter.lName || this.filter.teamName || this.filterText) {
+      this.filterIsActiv = true;
+    }
+  }
 
+  clearFilters() {
+
+    this.emptyFilters();
+    this.filterIsActiv = false;
+    this.getContactsAnyFilter();
+
+
+  }
+  emptyFilters() {
+    this.filterText = "";
+    this.filter.name = "";
+    this.filter.lName = "";
+    this.filter.teamName = "";
   }
 
 }
