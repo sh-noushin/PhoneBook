@@ -12,18 +12,20 @@ using PhoneBook.Domain.Contacts.Views;
 namespace PhoneBook.Application.Contacts
 {
 
-    public class ContactService : IContactService
+    public class ContactService : IContactService 
     {
 
         private readonly IContactRepository _contactRepository;
         private readonly IContactManager _contactManager;
+        private readonly IPhoneValidationService _phoneValidationService;
         private readonly IMapper _mapper;
 
-        public ContactService(IContactRepository contactepository, IContactManager contactManager, IMapper mapper)
+        public ContactService(IContactRepository contactepository, IContactManager contactManager, IMapper mapper, IPhoneValidationService phoneserives)
         {
             _contactRepository = contactepository;
             _contactManager = contactManager;
             _mapper = mapper;
+            _phoneValidationService = phoneserives; 
 
         }
 
@@ -33,10 +35,14 @@ namespace PhoneBook.Application.Contacts
         }
         public async Task CreateAsync(ContactCreateRequest input)
         {
-            var contact = await _contactManager.CreateAsync(input.Name, input.LName, input.Gender, input.PhoneNumber, input.DirectBossId);
-            if (contact != null)
+            var x =  _phoneValidationService.IsValidPhone(input.PhoneNumber);
+            if (x!= false )
             {
-                await _contactRepository.CreateAsync(contact);
+                var contact = await _contactManager.CreateAsync(input.Name, input.LName, input.Gender, input.PhoneNumber, input.DirectBossId);
+                if (contact != null)
+                {
+                    await _contactRepository.CreateAsync(contact);
+                }
             }
         }
 

@@ -29,6 +29,9 @@ namespace PhoneBook.WebAPI.Extentions
             services.AddScoped<IContactManager, ContactManager>();
             services.AddScoped<IContactRepository, ContactRepository>();
 
+            services.AddScoped<IPhoneValidationService, PhoneValidationService>();
+
+
             services.AddAutoMapper(typeof(PhoneBook.Application.Contacts.ContactsMappingProfile).Assembly);
             services.AddAutoMapper(typeof(PhoneBook.Application.Teams.TeamsMappingProfile).Assembly);
             services.AddAutoMapper(typeof(PhoneBook.Application.TeamMembers.TeamMembersMappingProfile).Assembly);

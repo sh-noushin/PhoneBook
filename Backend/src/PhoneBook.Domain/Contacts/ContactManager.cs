@@ -1,5 +1,6 @@
 ﻿using PhoneBook.Domain.Contacts.Exceptions;
 using PhoneBook.Domain.Shared.Enums;
+using PhoneBook.Domain.TeamMembers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +13,18 @@ namespace PhoneBook.Domain.Contacts
     {
 
         private readonly IContactRepository _contactRepository;
-        public ContactManager(IContactRepository repo)
+        private readonly ITeamMemberRepository _teamMemberRepository;
+        public ContactManager(IContactRepository repo, ITeamMemberRepository teamRepo)
         {
             _contactRepository = repo;
+            _teamMemberRepository = teamRepo;   
         }
         public async Task<Contact> CreateAsync(string name, string lname,Gender gender, string phone, int bossId)
         {
+            if(await _teamMemberRepository.FindAsync(x => x.Id == bossId) == null)
+            {
+                throw new ContactDirectBossIdIsNotValidException(bossId);
+            }
             if (await _contactRepository.FindAsync(x => x.Name == name && x.LName == lname) != null)
             {
                 throw new ContactAlreadyExistsException(name, lname);
