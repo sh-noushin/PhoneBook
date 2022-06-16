@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PhoneBook.Domain.Contacts;
+using PhoneBook.Domain.Shared.Enums;
 using PhoneBook.Domain.TeamMembers;
 using PhoneBook.Domain.Teams;
 using System;
@@ -49,6 +51,16 @@ namespace PhoneBook.EntityFrameworkCore
                 new TeamMember { Id = 6, TeamId = 4, FullName = "Albert Dario" },
                 new TeamMember { Id = 7, TeamId = 3, FullName = "Stephen Jack" }
             );
+
+            modelBuilder.Entity<Contact>().HasData(
+               new Contact { Id = 1, DirectBossId = 1, Name = "Ali" , LName = " Rezayi" , Gender =(Gender)0 , PhoneNumber ="+1 (413) 656656"},
+               new Contact { Id = 2, DirectBossId = 1, Name = "Reza", LName = " Ahmadi", Gender = (Gender)0 , PhoneNumber = "+49 453 78786776" },
+               new Contact { Id = 3, DirectBossId = 2, Name = "Mike" , LName = " Mirof", Gender = (Gender)1 , PhoneNumber = "+98 (756) 97787878" },
+               new Contact { Id = 4, DirectBossId = 3, Name = "Erfan", LName = " Sadeghi", Gender = (Gender)0 ,PhoneNumber = "+97 554 7668668" },
+               new Contact { Id = 5, DirectBossId = 4, Name = "Erica" , LName = " Jouns", Gender = (Gender)1 , PhoneNumber = "+12 (767) 9797799" },
+               new Contact { Id = 6, DirectBossId = 5, Name = "Andres", LName = " Kavian", Gender = (Gender)0 , PhoneNumber = "+78 988 7667676" },
+               new Contact { Id = 7, DirectBossId = 7, Name = "Julia" , LName = " Sarapova", Gender = (Gender)1 , PhoneNumber = "+12 (654) 98878778" }
+           );
         }
     }
 }

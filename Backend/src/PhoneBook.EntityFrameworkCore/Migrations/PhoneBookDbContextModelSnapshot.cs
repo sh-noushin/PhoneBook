@@ -52,6 +52,71 @@ namespace PhoneBook.EntityFrameworkCore.Migrations
                     b.HasIndex("DirectBossId");
 
                     b.ToTable("Contacts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DirectBossId = 1,
+                            Gender = 0,
+                            LName = " Rezayi",
+                            Name = "Ali",
+                            PhoneNumber = "+1 (413) 656656"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DirectBossId = 1,
+                            Gender = 0,
+                            LName = " Ahmadi",
+                            Name = "Reza",
+                            PhoneNumber = "+49 453 78786776"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DirectBossId = 2,
+                            Gender = 1,
+                            LName = " Mirof",
+                            Name = "Mike",
+                            PhoneNumber = "+98 (756) 97787878"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            DirectBossId = 3,
+                            Gender = 0,
+                            LName = " Sadeghi",
+                            Name = "Erfan",
+                            PhoneNumber = "+97 554 7668668"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            DirectBossId = 4,
+                            Gender = 1,
+                            LName = " Jouns",
+                            Name = "Erica",
+                            PhoneNumber = "+12 (767) 9797799"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            DirectBossId = 5,
+                            Gender = 0,
+                            LName = " Kavian",
+                            Name = "Andres",
+                            PhoneNumber = "+78 988 7667676"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            DirectBossId = 7,
+                            Gender = 1,
+                            LName = " Sarapova",
+                            Name = "Julia",
+                            PhoneNumber = "+12 (654) 98878778"
+                        });
                 });
 
             modelBuilder.Entity("PhoneBook.Domain.TeamMembers.TeamMember", b =>

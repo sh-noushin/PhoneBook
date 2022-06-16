@@ -89,6 +89,20 @@ namespace PhoneBook.EntityFrameworkCore.Migrations
                     { 7, "Stephen Jack", 3 }
                 });
 
+            migrationBuilder.InsertData(
+                table: "Contacts",
+                columns: new[] { "Id", "DirectBossId", "Gender", "LName", "Name", "PhoneNumber" },
+                values: new object[,]
+                {
+                    { 1, 1, 0, " Rezayi", "Ali", "+1 (413) 656656" },
+                    { 2, 1, 0, " Ahmadi", "Reza", "+49 453 78786776" },
+                    { 3, 2, 1, " Mirof", "Mike", "+98 (756) 97787878" },
+                    { 4, 3, 0, " Sadeghi", "Erfan", "+97 554 7668668" },
+                    { 5, 4, 1, " Jouns", "Erica", "+12 (767) 9797799" },
+                    { 6, 5, 0, " Kavian", "Andres", "+78 988 7667676" },
+                    { 7, 7, 1, " Sarapova", "Julia", "+12 (654) 98878778" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Contacts_DirectBossId",
                 table: "Contacts",
