@@ -4,7 +4,6 @@ import { ContactService } from 'src/app/_sevices/contact.service';
 import { FormBuilder, FormGroup, Validators,ReactiveFormsModule, FormControl  } from '@angular/forms';
 import { Contact } from 'src/app/_models/contact';
 import { Router } from '@angular/router';
-import { MatOption } from '@angular/material/core';
 
 
 
@@ -21,9 +20,10 @@ export class AddcontactComponent implements OnInit {
 
   selectedGender : number =0;
   members = [] as Array<DirectBoss>;
-  errorDivName: boolean = true;
-  errorDivLName: boolean = true;
-  errorDivPhone: boolean = true;
+  errorDivName: boolean = false;
+  errorDivLName: boolean = false;
+  errorDivPhone: boolean = false;
+  errorDivManager: boolean = true;
 
   newContact = {} as Contact;
   selectedTeamMember : number = 0;
@@ -43,7 +43,7 @@ export class AddcontactComponent implements OnInit {
   loadTeamMmbers() {
 
 
-    this.service.getAllTeamMembersList()
+     this.service.getAllTeamMembersList()
       .subscribe(data => {
 
         this.members = data;
@@ -69,6 +69,7 @@ export class AddcontactComponent implements OnInit {
   }
     setSelectedManager(e: any) {
       this.selectedTeamMember = e;
+      this.errorDivManager = false;
       this.newContact.directBossId = this.selectedTeamMember;
       console.log(this.selectedTeamMember);
   
@@ -82,16 +83,16 @@ export class AddcontactComponent implements OnInit {
     }
     setNameError(){
 
-      this.errorDivName =! this.errorDivName;
+      this.errorDivName = true;
     }
     setLNameError(){
 
-      this.errorDivLName =! this.errorDivLName;
+      this.errorDivLName = true;
     }
     checkPhone()
     {
 
-      this.errorDivPhone = !this.errorDivPhone;
+      this.errorDivPhone = true;
     }
 
 }
