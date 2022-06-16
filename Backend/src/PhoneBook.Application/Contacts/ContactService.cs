@@ -11,6 +11,7 @@ using PhoneBook.Domain.Contacts.Views;
 
 namespace PhoneBook.Application.Contacts
 {
+
     public class ContactService : IContactService
     {
 
@@ -44,21 +45,21 @@ namespace PhoneBook.Application.Contacts
             await _contactRepository.DeleteAsync(id);
         }
 
-        public async Task<PagedResultResponse<ContactResponse>> GetAllAsync(GetContactsRequest filter)
-        {
-            long totalCount = await _contactRepository.GetCountAsync(filter.FilterText);
+        //public async Task<PagedResultResponse<ContactResponse>> GetAllAsync(GetContactsRequest filter)
+        //{
+        //    long totalCount = await _contactRepository.GetCountAsync(filter.FilterText);
 
-            var items = await _contactRepository.GetAllAsync(
-                filter.FilterText,
-                filter.Sorting,
-                filter.SkipCount,
-                filter.MaxResultCount);
-            return new PagedResultResponse<ContactResponse>()
-            {
-                TotalCount = totalCount,
-                Items = _mapper.Map<List<Contact>, List<ContactResponse>>(items)
-            };
-        }
+        //    var items = await _contactRepository.GetAllAsync(
+        //        filter.FilterText,
+        //        filter.Sorting,
+        //        filter.SkipCount,
+        //        filter.MaxResultCount);
+        //    return new PagedResultResponse<ContactResponse>()
+        //    {
+        //        TotalCount = totalCount,
+        //        Items = _mapper.Map<List<Contact>, List<ContactResponse>>(items)
+        //    };
+        //}
 
         public async Task<PagedResultResponse<ContactWithDetailsResponse>> GetAllWithDetailsAsync(GetContactsWithDetailsRequest input)
         {
@@ -102,6 +103,22 @@ namespace PhoneBook.Application.Contacts
             {
                 throw new ContactNotFoundException(id);
             }
+        }
+
+        public async Task<PagedResultResponse<ContactWithDetailsResponse>> GetAllWithDetailsAnyFilterAsync(GetContactWithDetailsAnyFilterRequest filter)
+        {
+            long totalCount = await _contactRepository.GetCountAsync(filter.FilterText);
+
+            var items = await _contactRepository.GetAllWithDetailsAsync(
+                filter.FilterText,
+                filter.Sorting,
+                filter.SkipCount,
+                filter.MaxResultCount);
+            return new PagedResultResponse<ContactWithDetailsResponse>()
+            {
+                TotalCount = totalCount,
+                Items = _mapper.Map<List<ContactWithDetailsView>, List<ContactWithDetailsResponse>>(items)
+            };
         }
     }
 }

@@ -10,8 +10,9 @@ namespace PhoneBook.Application.Contract.Contacts
         Task CreateAsync(ContactCreateRequest input);
         Task UpdateAsync(int id, ContactUpdateRequest input);
         Task DeleteAsync(int id);
-        Task<PagedResultResponse<ContactResponse>> GetAllAsync(GetContactsRequest filter);
+        //Task<PagedResultResponse<ContactResponse>> GetAllAsync(GetContactsRequest filter);
         Task<PagedResultResponse<ContactWithDetailsResponse>> GetAllWithDetailsAsync(GetContactsWithDetailsRequest filter);
+        Task<PagedResultResponse<ContactWithDetailsResponse>> GetAllWithDetailsAnyFilterAsync(GetContactWithDetailsAnyFilterRequest filter);
         Task<ContactResponse> GetByIdAsync(int id);
     }
 }

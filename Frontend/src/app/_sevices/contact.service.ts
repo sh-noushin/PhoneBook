@@ -15,39 +15,35 @@ export class ContactService {
   readonly APIUrl = 'https://localhost:7279/';
   selectedRow : number = 0;
 
-  // getContactWithDetailsList(): Observable<any> {
-    
-  //   return this.http.get<any>(this.APIUrl + 'Contact/withdetails');
   
 
-  // }
-
-  // getContactWithDetailsList(filterText: string, skipCount: number, maxResultCount: number, sorting: string): Observable<any> {
+  getAllContacts(skipCount: number, maxResultCount: number, sorting: string): Observable<any> {
     
-  //   return this.http.get<any>(this.APIUrl + 'Contact/details?FilterText=' + filterText + '&SkipCount=' +
-  //   skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
-  
-
-  // }
-  // getContactWithDetailsListFilter(filter: ContactWithDetailsFilter, skipCount: number, maxResultCount: number, sorting: string): Observable<any> {
-    
-  //   return this.http.get<any>(this.APIUrl + 'Contact/details?AnyFilter=' + "m" +'&Name=' +"d"+ '&SkipCount=' +
-  //   skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
-  
-
-  // }
-
-  getContactWithDetailsListFilter(anyFilter : string, name : string, lName : string, 
-    teamName : string, phoneNumber: string, directBossFullName: string, skipCount: number, maxResultCount: number, sorting: string): Observable<any> {
-    
-    return this.http.get<any>(this.APIUrl + 'Contact/details?AnyFilter=' + anyFilter +'&Name=' + name + '&LName=' + lName +
-    '&PhoneNumber=' + phoneNumber + '&TeamName=' + teamName + '&DirectBossFullName=' + directBossFullName + '&SkipCount=' +
+    return this.http.get<any>(this.APIUrl + 'Contact/details/anyfilter?SkipCount=' +
     skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
-    // return this.http.get<any>(this.APIUrl + 'Contact/details?AnyFilter=' + anyFilter  + '&SkipCount=' +
+      
+  }
+  getContactWithAnyFilter(filterText: string, skipCount: number, maxResultCount: number, sorting: string): Observable<any> {
+    
+    return this.http.get<any>(this.APIUrl + 'Contact/details/anyfilter?FilterText=' + filterText + '&SkipCount=' +
+    skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
+      
+  }
+
+  getContactWithSpecificFilter(filter: ContactWithDetailsFilter, skipCount: number, maxResultCount: number, sorting: string): Observable<any> {
+    
+    // return this.http.get<any>(this.APIUrl + 'Contact/details?Name=' + filter.name +'&LName=' +filter.lName+ '&TeamName' +filter.teamName+ '&SkipCount=' +
     // skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
+    // return this.http.get<any>(this.APIUrl + 'Contact/details?Name=' + filter.name + '&SkipCount=' +
+    // skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
+    return this.http.get<any>(this.APIUrl + 'Contact/details?Name=' + filter.name + 
+    '&LName=' + filter.lName + '&TeamName=' + filter.teamName + '&SkipCount=' +
+    skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
   
 
   }
+
+  
   getAllTeamMembersList(): Observable<any> {
     
     return this.http.get<any>(this.APIUrl + 'TeamMember');

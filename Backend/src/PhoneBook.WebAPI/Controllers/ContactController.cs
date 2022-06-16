@@ -28,10 +28,18 @@ namespace PhoneBook.WebAPI.Controllers
         {
             return _contactService.CreateAsync(input);
         }
-        [HttpGet]
-        public async Task<PagedResultResponse<ContactResponse>> GetAllAsync([FromQuery] GetContactsRequest input)
+        //[HttpGet]
+        //public async Task<PagedResultResponse<ContactResponse>> GetAllAsync([FromQuery] GetContactsRequest input)
+        //{
+        //    return await _contactService.GetAllAsync(input);
+
+        //}
+
+        [HttpGet("details/anyfilter")]
+
+        public async Task<PagedResultResponse<ContactWithDetailsResponse>> GetAllWithDetailsAsync([FromQuery] GetContactWithDetailsAnyFilterRequest input)
         {
-            return await _contactService.GetAllAsync(input);
+            return await _contactService.GetAllWithDetailsAnyFilterAsync(input);
 
         }
 

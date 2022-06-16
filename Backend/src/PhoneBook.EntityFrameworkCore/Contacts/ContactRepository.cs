@@ -18,7 +18,7 @@ namespace PhoneBook.EntityFrameworkCore.Contacts
         {
 
         }
-        public async Task<List<ContactWithDetailsView>> GetAllWithDetailsAsync(string filterText, string sorting, int skipCount = 0, int maxResultCount = 5)
+        public async Task<List<ContactWithDetailsView>> GetAllWithDetailsAsync(string filterText = "", string sorting = "", int skipCount = 0, int maxResultCount = 5)
         {
             var query = (await QueryableAsync())
                 .Include(x => x.DirectBoss)
@@ -67,24 +67,28 @@ namespace PhoneBook.EntityFrameworkCore.Contacts
         }
 
 
-        public async Task<List<Contact>> GetAllAsync(string filterText = "", string sorting = "", int skipCount = 0, int maxResultCount = 10)
-        {
-            var query = await QueryableAsync();
-            query = ApplyFilter(query, filterText)
-                .OrderBy(!string.IsNullOrEmpty(sorting) ? sorting : ContactConsts.DefaultSorting)
-                .PageBy(skipCount, maxResultCount);
+        //public async Task<List<Contact>> GetAllAsync(string filterText = "", string sorting = "", int skipCount = 0, int maxResultCount = 10)
+        //{
+        //    var query = await QueryableAsync();
+        //    query = ApplyFilter(query, filterText)
+        //        .OrderBy(!string.IsNullOrEmpty(sorting) ? sorting : ContactConsts.DefaultSorting)
+        //        .PageBy(skipCount, maxResultCount);
 
-            return await query.ToListAsync();
-        }
+        //    return await query.ToListAsync();
+        //}
 
         protected IQueryable<Contact> ApplyFilter(IQueryable<Contact> query, string filtertext)
         {
-            return query.WhereIf(!string.IsNullOrEmpty(filtertext), x => x.Name.ToLower().Contains(filtertext.ToLower()));
+            return query.WhereIf(!string.IsNullOrEmpty(filtertext), x => x.Name.Contains(filtertext));
 
         }
+
         protected IQueryable<ContactWithDetailsView> ApplyFilter(IQueryable<ContactWithDetailsView> query, string filtertext)
         {
-            return query.WhereIf(!string.IsNullOrEmpty(filtertext), x => x.Name.ToLower().Contains(filtertext.ToLower()));
+            return query.WhereIf(!string.IsNullOrEmpty(filtertext), x => x.Name.Contains(filtertext)
+                                || x.Lname.Contains(filtertext)
+                                || x.Team.Name.Contains(filtertext)
+                                || x.DirectBoss.FullName.Contains(filtertext));
 
         }
         protected IQueryable<ContactWithDetailsView> ApplyFilter(IQueryable<ContactWithDetailsView> query, ContactWithDetailsFilter filter)
@@ -143,7 +147,7 @@ namespace PhoneBook.EntityFrameworkCore.Contacts
         }
         public async Task<long> GetCountAsync(string filterText)
         {
-            var query = await QueryableAsync();
+            var query = await GetQueryableForDetailsView();
             query = ApplyFilter(query, filterText);
 
             return await query.CountAsync();

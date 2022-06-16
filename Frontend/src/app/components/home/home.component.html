@@ -1,32 +1,22 @@
-<div>
+<div style="display: flex; flex-direction: row;">
    <mat-form-field appearance="standard" style="overflow:auto; display: flex; flex-direction:column; width: 300px; margin-left: 20px; ">
    <input matInput (keyup)="applyFilter($event)" placeholder="General Filter" #input  >
   </mat-form-field>
 
   <mat-form-field appearance="standard" style="overflow:auto; display: flex; flex-direction:column; width: 300px; margin-left: 20px; ">
-    <input matInput  placeholder="Name Filter" #input>
+    <input matInput  (keyup)="applyFilterName($event)" placeholder="Name Filter" #input>
   </mat-form-field>
 
   <mat-form-field appearance="standard" style="overflow:auto; display: flex; flex-direction:column; width: 300px; margin-left: 20px; ">
-     <input matInput placeholder="Last Name Filter" #input>
+     <input matInput  (keyup)="applyFilterLName($event)" placeholder="Last Name Filter" #input>
   </mat-form-field>
 
-  <mat-form-field appearance="standard" style="overflow:auto; display: flex; flex-direction:column; width: 300px; margin-left: 20px; ">
-      <input matInput  placeholder="Manager Name Filter" #input>
-  </mat-form-field>
-
-  <mat-form-field appearance="standard" style="overflow:auto; display: flex; flex-direction:column; width: 300px; margin-left: 20px; ">
+    <mat-form-field appearance="standard" style="overflow:auto; display: flex; flex-direction:column; width: 300px; margin-left: 20px; ">
    
-
-    <input matInput  placeholder="Team Name Filter" #input>
+    <input matInput  (keyup)="applyFilterTeam($event)" placeholder="Team Name Filter" #input>
   </mat-form-field>
 
-  <button mat-fab aria-label="Example icon button with a heart icon" (click)="onAdd()"
-    style="background-color:rgb(51, 151, 233);  border: none; margin-left:150px; margin-top:10px; margin-bottom: 30px; align-self: left;">
-    <mat-icon aria-label="Add">add</mat-icon>
-  </button>
-</div>
-  
+   </div>
     <mat-table  [dataSource] = "dataSource" matSort  class="mat-elevation-z8"  (matSortChange)="onSortChanged($event)" style="margin-top: 30px;;">
     <mat-header-row *matHeaderRowDef="displayedColumns" style="background-color: rgb(132, 232, 239);"></mat-header-row>
     <mat-row *matRowDef="let row; columns:displayedColumns;" ></mat-row>
