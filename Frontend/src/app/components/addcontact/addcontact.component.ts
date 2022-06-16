@@ -62,8 +62,8 @@ export class AddcontactComponent implements OnInit {
         
     });
 
-   this.router.navigateByUrl("/");
-   
+   //this.router.navigateByUrl("/");
+   window.location.reload();
 
 
   }

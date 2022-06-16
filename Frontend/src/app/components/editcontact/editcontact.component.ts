@@ -12,16 +12,16 @@ import { ContactService } from 'src/app/_sevices/contact.service';
 export class EditcontactComponent implements OnInit {
 
 
-members = [] as Array<DirectBoss>;
-contact = {} as Contact;
-selectedGender : number =0;
-selectedTeamMember : number = 0;
-errorDivName: boolean = false;
-errorDivLName: boolean = false;
-errorDivPhone: boolean = false;
+  members = [] as Array<DirectBoss>;
+  contact = {} as Contact;
+  selectedGender: number = 0;
+  selectedTeamMember: number = 0;
+  errorDivName: boolean = false;
+  errorDivLName: boolean = false;
+  errorDivPhone: boolean = false;
 
 
-  constructor(private service :ContactService,
+  constructor(private service: ContactService,
     private router: Router) { }
 
   ngOnInit(): void {
@@ -31,8 +31,7 @@ errorDivPhone: boolean = false;
     this.loadSelectedContact(this.service.selectedRow);
   }
 
-  loadSelectedContact(id : number)
-  {
+  loadSelectedContact(id: number) {
     this.service.getContactById(id).subscribe(data => {
       this.contact = data;
       console.log(this.contact);
@@ -60,7 +59,7 @@ errorDivPhone: boolean = false;
 
   }
 
-  setSelectedGender(e: any){
+  setSelectedGender(e: any) {
     this.selectedGender = e;
     this.contact.gender = this.selectedGender;
     console.log(this.selectedGender);
@@ -69,34 +68,37 @@ errorDivPhone: boolean = false;
 
   onSubmit(form: any) {
 
-        if(this.contact.name == "")
-        {
-          this.errorDivLName = true;
-        }
-        if(this.contact.lName == "")
-        {
-          this.errorDivPhone = true;
-        }
-        else{
-    console.log(this.contact);
-    this.service.editContct(this.contact).subscribe(res => {
-      console.log(res);
-    });
+    if (this.contact.name == "") {
+      this.errorDivLName = true;
+    }
+    if (this.contact.lName == "") {
+      this.errorDivPhone = true;
+    }
+    else {
+      console.log(this.contact);
+      this.service.editContct(this.contact).subscribe(res => {
+        console.log(res);
+      });
 
-    this.router.navigateByUrl("/");
+      this.router.navigate(['/'])
+      .then(() => {
+        window.location.reload();
+      });
+
+    }
   }
 
-  }
-  setNameError(){
 
-    this.errorDivName =true;
-  }
-  setLNameError(){
 
-    this.errorDivLName =true;
+  setNameError() {
+
+    this.errorDivName = true;
   }
-  checkPhone()
-  {
+  setLNameError() {
+
+    this.errorDivLName = true;
+  }
+  checkPhone() {
 
     this.errorDivPhone = true;
   }

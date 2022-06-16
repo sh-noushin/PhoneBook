@@ -121,6 +121,7 @@ export class HomeComponent implements OnInit {
     this.service.selectedRow = contact.id;
     this.router.navigate(["/editcontact"]);
     this.getAllContacts();
+    
   }
 
 
