@@ -5,19 +5,21 @@ VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2F5E4FFE-5C46-41A2-A9B1-38B245901674}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{904C2B0B-0172-4EBA-9583-08D74127B27E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{904C2B0B-0172-4EBA-9583-08D74127B27E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoneBook.WebAPI", "src\PhoneBook.WebAPI\PhoneBook.WebAPI.csproj", "{12214743-C461-4425-A450-AE1433D7AB81}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoneBook.WebAPI", "src\PhoneBook.WebAPI\PhoneBook.WebAPI.csproj", "{12214743-C461-4425-A450-AE1433D7AB81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoneBook.Domain", "src\PhoneBook.Domain\PhoneBook.Domain.csproj", "{C1ABB242-6C49-4124-9416-E448353C298C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoneBook.Domain", "src\PhoneBook.Domain\PhoneBook.Domain.csproj", "{C1ABB242-6C49-4124-9416-E448353C298C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoneBook.EntityFrameworkCore", "src\PhoneBook.EntityFrameworkCore\PhoneBook.EntityFrameworkCore.csproj", "{E10B8FE8-87D4-45DB-AED3-C979FF1B117B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoneBook.EntityFrameworkCore", "src\PhoneBook.EntityFrameworkCore\PhoneBook.EntityFrameworkCore.csproj", "{E10B8FE8-87D4-45DB-AED3-C979FF1B117B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoneBook.Domain.Shared", "src\PhoneBook.Domain.Shared\PhoneBook.Domain.Shared.csproj", "{0A594E8F-2584-459B-8F6F-323FBAC13249}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoneBook.Domain.Shared", "src\PhoneBook.Domain.Shared\PhoneBook.Domain.Shared.csproj", "{0A594E8F-2584-459B-8F6F-323FBAC13249}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoneBook.Application", "src\PhoneBook.Application\PhoneBook.Application.csproj", "{8D2007B5-84DE-490E-86D9-502890C78654}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoneBook.Application", "src\PhoneBook.Application\PhoneBook.Application.csproj", "{8D2007B5-84DE-490E-86D9-502890C78654}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoneBook.Application.Contract", "src\PhoneBook.Application.Contract\PhoneBook.Application.Contract.csproj", "{12051B55-C3CC-4CCE-BF41-8E5DA2AC65E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoneBook.Application.Contract", "src\PhoneBook.Application.Contract\PhoneBook.Application.Contract.csproj", "{12051B55-C3CC-4CCE-BF41-8E5DA2AC65E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoneBookTest", "test\PhoneBookTest\PhoneBookTest.csproj", "{8DEE22BB-C902-401C-87A8-399088ED774E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{12051B55-C3CC-4CCE-BF41-8E5DA2AC65E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12051B55-C3CC-4CCE-BF41-8E5DA2AC65E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12051B55-C3CC-4CCE-BF41-8E5DA2AC65E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DEE22BB-C902-401C-87A8-399088ED774E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DEE22BB-C902-401C-87A8-399088ED774E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DEE22BB-C902-401C-87A8-399088ED774E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DEE22BB-C902-401C-87A8-399088ED774E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +66,7 @@ Global
 		{0A594E8F-2584-459B-8F6F-323FBAC13249} = {2F5E4FFE-5C46-41A2-A9B1-38B245901674}
 		{8D2007B5-84DE-490E-86D9-502890C78654} = {2F5E4FFE-5C46-41A2-A9B1-38B245901674}
 		{12051B55-C3CC-4CCE-BF41-8E5DA2AC65E9} = {2F5E4FFE-5C46-41A2-A9B1-38B245901674}
+		{8DEE22BB-C902-401C-87A8-399088ED774E} = {904C2B0B-0172-4EBA-9583-08D74127B27E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A00AB7FA-768F-4DA3-8747-4C4130ECD2C8}
