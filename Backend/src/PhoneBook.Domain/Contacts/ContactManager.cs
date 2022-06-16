@@ -29,6 +29,10 @@ namespace PhoneBook.Domain.Contacts
             {
                 throw new ContactAlreadyExistsException(name, lname);
             }
+            if(string.IsNullOrEmpty(name) || string.IsNullOrEmpty(lname))
+            {
+                throw new ContactNameIsNullOrWhiteSpaceException();
+            }
             var contact = new Contact(name, lname, gender, phone, bossId);
             return contact;
         }
