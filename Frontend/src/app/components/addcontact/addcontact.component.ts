@@ -9,8 +9,6 @@ import { Router } from '@angular/router';
 
 
 
-
-
 @Component({
   selector: 'app-addcontact',
   templateUrl: './addcontact.component.html',
@@ -62,7 +60,7 @@ export class AddcontactComponent implements OnInit {
         
     });
 
-   //this.router.navigateByUrl("/");
+  
    window.location.reload();
 
 

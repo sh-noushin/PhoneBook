@@ -62,10 +62,18 @@ export class ContactService {
       +'&TeamName=' + filter.teamName + '&SkipCount=' +
       skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
     }
-
+    if(this.isEmptyOrSpaces(filter.name) && this.isEmptyOrSpaces(filter.lName) && !this.isEmptyOrSpaces(filter.teamName))
+    {
+      return this.http.get<any>(this.APIUrl + 'Contact/details?TeamName=' + filter.teamName 
+      + '&SkipCount=' + skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
+    }
+    if(this.isEmptyOrSpaces(filter.name) && this.isEmptyOrSpaces(filter.lName) && !this.isEmptyOrSpaces(filter.teamName))
+    {
     return this.http.get<any>(this.APIUrl + 'Contact/details/anyfilter?SkipCount=' +
     skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
-      
+    }
+    return this.http.get<any>(this.APIUrl + 'Contact/details/anyfilter?SkipCount=' +
+    skipCount + '&MaxResultCount=' + maxResultCount + '&Sorting=' + sorting);
    
   }
 

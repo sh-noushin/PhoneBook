@@ -1,25 +1,25 @@
 <div style="display: flex; flex-direction: row;">
    <mat-form-field appearance="standard" style="overflow:auto; display: flex; flex-direction:column; width: 300px; margin-left: 20px; ">
-   <input matInput (keydown)="applyFilter($event)" 
+   <input matInput (keyup)="applyFilter($event)" 
    [(ngModel)]="filterText"
    placeholder="General Filter" #input  >
   </mat-form-field>
 
   <mat-form-field appearance="standard" style="overflow:auto; display: flex; flex-direction:column; width: 300px; margin-left: 20px; ">
-    <input matInput  (keydown)="applyFilterName($event)" 
+    <input matInput  (keyup)="applyFilterName($event)" 
     [(ngModel)]="filter.name"
     placeholder="Name Filter" #input>
   </mat-form-field>
 
   <mat-form-field appearance="standard" style="overflow:auto; display: flex; flex-direction:column; width: 300px; margin-left: 20px; ">
-     <input matInput  (keydown)="applyFilterLName($event)"
+     <input matInput  (keyup)="applyFilterLName($event)"
      [(ngModel)]="filter.lName"
       placeholder="Last Name Filter" #input>
   </mat-form-field>
 
     <mat-form-field appearance="standard" style="overflow:auto; display: flex; flex-direction:column; width: 300px; margin-left: 20px; ">
    
-    <input matInput  (keydown)="applyFilterTeam($event)"
+    <input matInput  (keyup)="applyFilterTeam($event)"
     [(ngModel)]="filter.teamName"
      placeholder="Team Name Filter" #input>
   </mat-form-field>
