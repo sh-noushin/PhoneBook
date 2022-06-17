@@ -9,7 +9,7 @@ namespace PhoneBook.Domain.Contacts.Filters
 {
     public class ContactWithDetailsFilter
     {
-        public string? AnyFilter { get; set; } = "";
+        public string AnyFilter { get; set; } = "";
         public string Name { get; set; } = "";
         public string LName { get; set; } = "";
         public string PhoneNumber { get; set; } = "";

@@ -32,11 +32,10 @@ namespace PhoneBook.Domain.Contacts
             {
                 throw new ContactAlreadyExistsException(name, lname);
             }
-            if(string.IsNullOrEmpty(name) || string.IsNullOrEmpty(lname))
+            if(string.IsNullOrEmpty(phone))
             {
-                throw new ContactNameIsNullOrWhiteSpaceException();
+                throw new PhoneNumberIsEmptyException();
             }
-
             _phoneValidator.ValidatePhoneNumber(phone);
             var contact = new Contact(name, lname, gender, phone, bossId);
             return contact;
@@ -47,6 +46,10 @@ namespace PhoneBook.Domain.Contacts
             if (await _contactRepository.FindAsync(x => x.Name == name && x.LName == lname && x.Id != input.Id) != null)
             {
                 throw new ContactAlreadyExistsException(name, lname);
+            }
+            if (string.IsNullOrEmpty(phone))
+            {
+                throw new PhoneNumberIsEmptyException();
             }
             _phoneValidator.ValidatePhoneNumber(phone);
             input.SetNameAndLname(name, lname);
