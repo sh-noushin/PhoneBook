@@ -107,20 +107,20 @@ namespace PhoneBook.Application.Contacts
             }
         }
 
-        public async Task<PagedResultResponse<ContactWithDetailsResponse>> GetAllWithDetailsAnyFilterAsync(GetContactWithDetailsAnyFilterRequest filter)
-        {
-            long totalCount = await _contactRepository.GetCountAsync(filter.FilterText);
+       //public async Task<PagedResultResponse<ContactWithDetailsResponse>> GetAllWithDetailsAnyFilterAsync(GetContactWithDetailsAnyFilterRequest filter)
+       // {
+       //     long totalCount = await _contactRepository.GetCountAsync(filter.FilterText);
 
-            var items = await _contactRepository.GetAllWithDetailsAsync(
-                filter.FilterText,
-                filter.Sorting,
-                filter.SkipCount,
-                filter.MaxResultCount);
-            return new PagedResultResponse<ContactWithDetailsResponse>()
-            {
-                TotalCount = totalCount,
-                Items = _mapper.Map<List<ContactWithDetailsView>, List<ContactWithDetailsResponse>>(items)
-            };
-        }
+       //     var items = await _contactRepository.GetAllWithDetailsAsync(
+       //         filter.FilterText,
+       //         filter.Sorting,
+       //         filter.SkipCount,
+       //         filter.MaxResultCount);
+       //     return new PagedResultResponse<ContactWithDetailsResponse>()
+       //     {
+       //         TotalCount = totalCount,
+       //         Items = _mapper.Map<List<ContactWithDetailsView>, List<ContactWithDetailsResponse>>(items)
+       //     };
+       // }
     }
 }

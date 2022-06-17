@@ -36,7 +36,8 @@ import {MatSortModule} from '@angular/material/sort';
     ReactiveFormsModule,
     MatPaginatorModule,
     MatButtonModule,
-    MatSortModule
+    MatSortModule,
+    
    
 
 

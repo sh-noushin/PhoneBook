@@ -1,10 +1,12 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { AfterViewInit, Component, ViewChild, OnInit } from '@angular/core';
-import { MatSort, Sort } from '@angular/material/sort';import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, Sort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { ContactService } from 'src/app/_sevices/contact.service';
 import { Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { ContactWithDetailsFilter } from 'src/app/_models/contactwithdetailsfilter';
+import { MatInput } from '@angular/material/input';
 
 
 
