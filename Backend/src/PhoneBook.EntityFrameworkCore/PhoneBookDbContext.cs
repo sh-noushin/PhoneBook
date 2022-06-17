@@ -33,11 +33,12 @@ namespace PhoneBook.EntityFrameworkCore
                         .WithMany()
                         .HasForeignKey(x => x.TeamId).IsRequired();
 
-            builder.Seed();
+            
             builder.Entity<Contact>()
                        .HasOne(x => x.DirectBoss)
                        .WithMany()
                        .HasForeignKey(x => x.DirectBossId).IsRequired();
+            builder.Seed();
 
 
         }
