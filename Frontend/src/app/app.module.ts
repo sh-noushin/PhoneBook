@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import {MatTableModule} from '@angular/material/table';
 import {MatIconModule} from '@angular/material/icon';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AddcontactComponent } from './components/addcontact/addcontact.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -18,34 +18,23 @@ import {MatSortModule} from '@angular/material/sort';
 
 
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    AddcontactComponent,
-    EditcontactComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    MatTableModule,
-    MatIconModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatPaginatorModule,
-    MatButtonModule,
-    MatSortModule,
-    
-   
-
-
-  ],
-  providers: [
-    
-  ],
-  bootstrap: [AppComponent],
-  schemas: [ CUSTOM_ELEMENTS_SCHEMA, ]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        HomeComponent,
+        AddcontactComponent,
+        EditcontactComponent
+    ],
+    bootstrap: [AppComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA,], imports: [BrowserModule,
+        AppRoutingModule,
+        MatTableModule,
+        MatIconModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatPaginatorModule,
+        MatButtonModule,
+        MatSortModule], providers: [
+        provideHttpClient(withXhr(), withInterceptorsFromDi())
+    ] })
 export class AppModule { }

@@ -1,40 +1,39 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { Contact } from 'src/app/_models/contact';
-import { DirectBoss } from 'src/app/_models/manager';
-import { ContactService } from 'src/app/_sevices/contact.service';
+import { Contact } from '../../_models/contact';
+import { DirectBoss } from '../../_models/manager';
+import { ContactService } from '../../_sevices/contact.service';
 
 @Component({
-  selector: 'app-editcontact',
-  templateUrl: './editcontact.component.html',
-  styleUrls: ['./editcontact.component.css']
+    selector: 'app-editcontact',
+    templateUrl: './editcontact.component.html',
+    styleUrls: ['./editcontact.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class EditcontactComponent implements OnInit {
 
+  private service = inject(ContactService);
+  private router = inject(Router);
 
-  members = [] as Array<DirectBoss>;
-  contact = {} as Contact;
-  selectedGender: number = 0;
-  selectedTeamMember: number = 0;
-  errorDivName: boolean = false;
-  errorDivLName: boolean = false;
-  errorDivPhone: boolean = false;
+  members = signal<DirectBoss[]>([]);
+  contact = signal({} as Contact);
+  errorDivName = signal(false);
+  errorDivLName = signal(false);
+  errorDivPhone = signal(false);
 
-
-  constructor(private service: ContactService,
-    private router: Router) { }
 
   ngOnInit(): void {
 
     this.loadTeamMmbers();
 
-    this.loadSelectedContact(this.service.selectedRow);
+    this.loadSelectedContact(this.service.selectedRow());
   }
 
   loadSelectedContact(id: number) {
     this.service.getContactById(id).subscribe(data => {
-      this.contact = data;
-      console.log(this.contact);
+      this.contact.set(data);
+      console.log(this.contact());
     })
   }
 
@@ -44,7 +43,7 @@ export class EditcontactComponent implements OnInit {
     this.service.getAllTeamMembersList()
       .subscribe(data => {
 
-        this.members = data;
+        this.members.set(data);
         console.log(data);
 
       }
@@ -52,31 +51,34 @@ export class EditcontactComponent implements OnInit {
 
   }
 
+  updateContact(changes: Partial<Contact>) {
+
+    this.contact.update(contact => ({ ...contact, ...changes }));
+  }
+
   setSelectedManager(e: any) {
-    this.selectedTeamMember = e;
-    this.contact.directBossId = this.selectedTeamMember;
-    console.log(this.selectedTeamMember);
+    this.updateContact({ directBossId: e });
+    console.log(e);
 
   }
 
   setSelectedGender(e: any) {
-    this.selectedGender = e;
-    this.contact.gender = this.selectedGender;
-    console.log(this.selectedGender);
+    this.updateContact({ gender: e });
+    console.log(e);
 
   }
 
   onSubmit(form: any) {
 
-    if (this.contact.name == "") {
-      this.errorDivLName = true;
+    if (this.contact().name == "") {
+      this.errorDivLName.set(true);
     }
-    if (this.contact.lName == "") {
-      this.errorDivPhone = true;
+    if (this.contact().lName == "") {
+      this.errorDivPhone.set(true);
     }
     else {
-      console.log(this.contact);
-      this.service.editContct(this.contact).subscribe(res => {
+      console.log(this.contact());
+      this.service.editContct(this.contact()).subscribe(res => {
         console.log(res);
       });
 
@@ -92,14 +94,14 @@ export class EditcontactComponent implements OnInit {
 
   setNameError() {
 
-    this.errorDivName = true;
+    this.errorDivName.set(true);
   }
   setLNameError() {
 
-    this.errorDivLName = true;
+    this.errorDivLName.set(true);
   }
   checkPhone() {
 
-    this.errorDivPhone = true;
+    this.errorDivPhone.set(true);
   }
 }

@@ -3,29 +3,25 @@
 
   <div class="form">
     <mat-form-field color="accent">
-      <input matInput #input class="form-control" placeholder=" Name" required type="text" [(ngModel)]="newContact.name"
+      <input matInput #input class="form-control" placeholder=" Name" required type="text"
+        [ngModel]="newContact().name" (ngModelChange)="updateContact({ name: $event })"
         name="name" (click)="setNameError()">
-      <!-- <div style="color: red; margin-top: 20px; margin-bottom: 20px;" *ngIf="(errorDivName) && (!formControl.valid)" >
-          Contact Name must be entered.
-        </div> -->
 
     </mat-form-field>
   </div>
   <div class="form" style="margin-top: 20px;">
     <mat-form-field color="accent">
       <input matInput #input class="form-control" placeholder="Last Name" required type="text"
-        [(ngModel)]="newContact.lName" name="lName" (click)="setLNameError()">
-      <!-- <div style="color: red; margin-top: 20px; margin-bottom: 20px;" *ngIf="(errorDivLName) && (!formControl.valid)" >
-          Contact Last Name must be entered.
-        </div> -->
+        [ngModel]="newContact().lName" (ngModelChange)="updateContact({ lName: $event })"
+        name="lName" (click)="setLNameError()">
     </mat-form-field>
   </div>
 
   <mat-label style="margin-top: 15px;"> Gender</mat-label>
   <div class="form">
     <mat-form-field color="accent" style="margin-top: 30px;">
-      <select matNativeControl name="selectgender" (ngModelChange)="setSelectedGender($event)"
-        [(ngModel)]="newContact.gender">
+      <select matNativeControl name="selectgender"
+        [ngModel]="newContact().gender" (ngModelChange)="setSelectedGender($event)">
         <option [ngValue]="null" disabled selected>Choose a Gender</option>
 
         <option value="Man" selected>Man</option>
@@ -39,10 +35,10 @@
 
     <mat-form-field color="accent">
       <input matInput #input class="form-control" placeholder="+1 (232) 86867667" type="text"
-        [(ngModel)]="newContact.phoneNumber"
-        required  
-         pattern="^\+?\d{1,3}[\s]\(?\d{2,5}\)?[\s]\d{3,15}$"
-          name="phone"
+        [ngModel]="newContact().phoneNumber" (ngModelChange)="updateContact({ phoneNumber: $event })"
+        required
+        pattern="^\+?\d{1,3}[\s]\(?\d{2,5}\)?[\s]\d{3,15}$"
+        name="phone"
         (click)="checkPhone()">
 
     </mat-form-field>
@@ -52,28 +48,35 @@
 
   <div>
 
-    <select matNativeControl name="selectmanager" required (ngModelChange)="setSelectedManager($event)"
-      [(ngModel)]="newContact.directBossId">
+    <select matNativeControl name="selectmanager" required
+      [ngModel]="newContact().directBossId" (ngModelChange)="setSelectedManager($event)">
       <option [ngValue]="null" disabled selected>Choose a Manager</option>
-      <option *ngFor="let x of members " [value]="x.id" required>
+      @for (x of members(); track x.id) {
+        <option [value]="x.id" required>
         {{x.fullName}}</option>
+      }
 
     </select>
-    <div style="color: red; margin-top: 20px; margin-bottom: 20px;" *ngIf=" (errorDivManager)">
-      <p>Manager must be selected</p>
-    </div>
+    @if (errorDivManager()) {
+      <div style="color: red; margin-top: 20px; margin-bottom: 20px;">
+        <p>Manager must be selected</p>
+      </div>
+    }
   </div>
 
   <div mat-dialog-actions>
     <button class="m-3" mat-raised-button color="primary" type="submit" [disabled]="!formControl.valid"
-      style="margin-top: 15px;">Save</button>
-    <div style="color: red; margin-top: 20px; margin-bottom: 20px;" *ngIf="((!errorDivName) || (!errorDivLName)) && !formControl.valid">
-      <p>-Name and Last Name could not be empty</p>
-    </div>
-    <div style="color: red; margin-top: 20px; margin-bottom: 20px;" *ngIf=" !formControl.valid">
-      <p>-Phone Numebr must be entered in these format:
-      <p>
-      <p>counry code , space , area code[2-5 digits], space ,phone number[3-15 digits]</p>
-    </div>
+    style="margin-top: 15px;">Save</button>
+    @if ((!errorDivName() || !errorDivLName()) && !formControl.valid) {
+      <div style="color: red; margin-top: 20px; margin-bottom: 20px;">
+        <p>-Name and Last Name could not be empty</p>
+      </div>
+    }
+    @if (!formControl.valid) {
+      <div style="color: red; margin-top: 20px; margin-bottom: 20px;">
+        <p>-Phone Numebr must be entered in these format:</p>
+        <p>counry code , space , area code[2-5 digits], space ,phone number[3-15 digits]</p>
+      </div>
+    }
   </div>
 </form>

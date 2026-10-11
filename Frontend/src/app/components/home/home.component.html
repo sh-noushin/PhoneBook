@@ -1,95 +1,94 @@
 <div style="display: flex; flex-direction: row;">
-   <mat-form-field appearance="standard" style="overflow:auto; display: flex; flex-direction:column; width: 300px; margin-left: 20px; ">
-   <input matInput (keyup)="applyFilter($event)" 
-   [(ngModel)]="filterText"
-   placeholder="General Filter" #input  >
+  <mat-form-field appearance="standard" style="overflow:auto; display: flex; flex-direction:column; width: 300px; margin-left: 20px; ">
+    <input matInput
+      [ngModel]="filterText()" (ngModelChange)="applyFilter($event)"
+      placeholder="General Filter" #input  >
   </mat-form-field>
 
   <mat-form-field appearance="standard" style="overflow:auto; display: flex; flex-direction:column; width: 300px; margin-left: 20px; ">
-    <input matInput  (keyup)="applyFilterName($event)" 
-    [(ngModel)]="filter.name"
-    placeholder="Name Filter" #input>
+    <input matInput
+      [ngModel]="filter().name" (ngModelChange)="applySpecificFilter({ name: $event })"
+      placeholder="Name Filter" #input>
   </mat-form-field>
 
   <mat-form-field appearance="standard" style="overflow:auto; display: flex; flex-direction:column; width: 300px; margin-left: 20px; ">
-     <input matInput  (keyup)="applyFilterLName($event)"
-     [(ngModel)]="filter.lName"
+    <input matInput
+      [ngModel]="filter().lName" (ngModelChange)="applySpecificFilter({ lName: $event })"
       placeholder="Last Name Filter" #input>
   </mat-form-field>
 
-    <mat-form-field appearance="standard" style="overflow:auto; display: flex; flex-direction:column; width: 300px; margin-left: 20px; ">
-   
-    <input matInput  (keyup)="applyFilterTeam($event)"
-    [(ngModel)]="filter.teamName"
-     placeholder="Team Name Filter" #input>
+  <mat-form-field appearance="standard" style="overflow:auto; display: flex; flex-direction:column; width: 300px; margin-left: 20px; ">
+
+    <input matInput
+      [ngModel]="filter().teamName" (ngModelChange)="applySpecificFilter({ teamName: $event })"
+      placeholder="Team Name Filter" #input>
   </mat-form-field>
-  
-   
+
+
   <mat-form-field appearance="standard" style="overflow:auto; display: flex; flex-direction:column; width: 100px; margin-left: 20px; ">
-      
-      <button mat-raised-button color="primary" *ngIf="filterIsActiv" (click)="clearFilters()">Clear filters</button>
-      
-     
-    </mat-form-field>
-  
 
-   </div>
-    <mat-table  [dataSource] = "dataSource" matSort  class="mat-elevation-z8" (matSortChange)="onSortChanged($event)" style="margin-top: 30px;;">
-    <mat-header-row *matHeaderRowDef="displayedColumns" style="background-color: rgb(132, 232, 239);"></mat-header-row>
-    <mat-row *matRowDef="let row; columns:displayedColumns;" ></mat-row>
-    
-    
-    
-    <ng-container matColumnDef="Id"  >
-      <mat-header-cell *matHeaderCellDef mat-sort-header  >Id</mat-header-cell>
-      <mat-header-cell *matCellDef="let element" >{{element.id}}</mat-header-cell>
-    </ng-container>
-    
-    <ng-container matColumnDef="Name" >
-        <mat-header-cell *matHeaderCellDef mat-sort-header  >Name</mat-header-cell>
-        <mat-header-cell *matCellDef="let element" >{{element.name}}</mat-header-cell>
-      </ng-container>
+    @if (filterIsActiv()) {
+      <button mat-raised-button color="primary" (click)="clearFilters()">Clear filters</button>
+    }
 
-      <ng-container matColumnDef="LName" >
-        <mat-header-cell *matHeaderCellDef mat-sort-header  >Last Name</mat-header-cell>
-        <mat-header-cell *matCellDef="let element" >{{element.lName}}</mat-header-cell>
-      </ng-container>
 
-      <ng-container matColumnDef="Gender" >
-        <mat-header-cell *matHeaderCellDef mat-sort-header  >Gender</mat-header-cell>
-        <mat-header-cell *matCellDef="let element" >{{element.gender}}</mat-header-cell>
-      </ng-container>
+  </mat-form-field>
 
-      <ng-container matColumnDef="PhoneNumber" >
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Phone Number</mat-header-cell>
-        <mat-header-cell *matCellDef="let element" >{{element.phoneNumber}}</mat-header-cell>
-      </ng-container>
 
-      <ng-container matColumnDef="TeamName" >
-        <mat-header-cell *matHeaderCellDef mat-sort-header  >Team</mat-header-cell>
-        <mat-header-cell *matCellDef="let element" >{{element.team.name}}</mat-header-cell>
-      </ng-container>
-    
-      <ng-container matColumnDef="DirectBossFullName" >
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Manager</mat-header-cell>
-        <mat-header-cell *matCellDef="let element" >{{element.directBoss.fullName}}</mat-header-cell>
-      </ng-container>
+</div>
+<mat-table  [dataSource] = "contacts()" matSort  class="mat-elevation-z8" (matSortChange)="onSortChanged($event)" style="margin-top: 30px;;">
+  <mat-header-row *matHeaderRowDef="displayedColumns" style="background-color: rgb(132, 232, 239);"></mat-header-row>
+  <mat-row *matRowDef="let row; columns:displayedColumns;" ></mat-row>
 
-      <ng-container matColumnDef="Options" >
-        <mat-header-cell *matHeaderCellDef >Options</mat-header-cell>
-        <mat-cell *matCellDef="let row" >
-          <button mat-icon-button style="background-color: white; border: none; color: blue;" (click)="onEdit(row)">
-            <mat-icon aria-label="Edit">edit</mat-icon>
-          </button>
-          <button mat-icon-button style="background-color: white;  border: none; color: red;" (click)="onDelete(row.id)">
-              <mat-icon aria-label="Delete" >delete</mat-icon>
-            </button>
-        </mat-cell>
-      </ng-container>
-      </mat-table>
-      <mat-paginator #paginator [length]="totalRows" [pageIndex]="currentPage" [pageSize]="pageSize"
-      [pageSizeOptions]="pageSizeOptions" (page)="pageChanged($event)" aria-label="Select page">
-    </mat-paginator>
 
-     
- 
+
+  <ng-container matColumnDef="Id"  >
+    <mat-header-cell *matHeaderCellDef mat-sort-header  >Id</mat-header-cell>
+    <mat-header-cell *matCellDef="let element" >{{element.id}}</mat-header-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="Name" >
+    <mat-header-cell *matHeaderCellDef mat-sort-header  >Name</mat-header-cell>
+    <mat-header-cell *matCellDef="let element" >{{element.name}}</mat-header-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="LName" >
+    <mat-header-cell *matHeaderCellDef mat-sort-header  >Last Name</mat-header-cell>
+    <mat-header-cell *matCellDef="let element" >{{element.lName}}</mat-header-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="Gender" >
+    <mat-header-cell *matHeaderCellDef mat-sort-header  >Gender</mat-header-cell>
+    <mat-header-cell *matCellDef="let element" >{{element.gender}}</mat-header-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="PhoneNumber" >
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Phone Number</mat-header-cell>
+    <mat-header-cell *matCellDef="let element" >{{element.phoneNumber}}</mat-header-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="TeamName" >
+    <mat-header-cell *matHeaderCellDef mat-sort-header  >Team</mat-header-cell>
+    <mat-header-cell *matCellDef="let element" >{{element.team.name}}</mat-header-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="DirectBossFullName" >
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Manager</mat-header-cell>
+    <mat-header-cell *matCellDef="let element" >{{element.directBoss.fullName}}</mat-header-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="Options" >
+    <mat-header-cell *matHeaderCellDef >Options</mat-header-cell>
+    <mat-cell *matCellDef="let row" >
+      <button mat-icon-button style="background-color: white; border: none; color: blue;" (click)="onEdit(row)">
+        <mat-icon aria-label="Edit">edit</mat-icon>
+      </button>
+      <button mat-icon-button style="background-color: white;  border: none; color: red;" (click)="onDelete(row.id)">
+        <mat-icon aria-label="Delete" >delete</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+</mat-table>
+<mat-paginator #paginator [length]="totalRows()" [pageIndex]="currentPage()" [pageSize]="pageSize()"
+  [pageSizeOptions]="pageSizeOptions" (page)="pageChanged($event)" aria-label="Select page">
+</mat-paginator>

@@ -1,40 +1,34 @@
-import { Component, OnInit } from '@angular/core';
-import { DirectBoss } from 'src/app/_models/manager';
-import { ContactService } from 'src/app/_sevices/contact.service';
-import { FormBuilder, FormGroup, Validators,ReactiveFormsModule, FormControl  } from '@angular/forms';
-import { Contact } from 'src/app/_models/contact';
-import { Router } from '@angular/router';
+import { Component, OnInit, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { DirectBoss } from '../../_models/manager';
+import { ContactService } from '../../_sevices/contact.service';
+import { Contact } from '../../_models/contact';
 
 
 
 
 
 @Component({
-  selector: 'app-addcontact',
-  templateUrl: './addcontact.component.html',
-  styleUrls: ['./addcontact.component.css']
+    selector: 'app-addcontact',
+    templateUrl: './addcontact.component.html',
+    styleUrls: ['./addcontact.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class AddcontactComponent implements OnInit {
 
-  selectedGender : number =0;
-  members = [] as Array<DirectBoss>;
-  errorDivName: boolean = false;
-  errorDivLName: boolean = false;
-  errorDivPhone: boolean = false;
-  errorDivManager: boolean = true;
+  private service = inject(ContactService);
 
-  newContact = {} as Contact;
-  selectedTeamMember : number = 0;
-  
+  members = signal<DirectBoss[]>([]);
+  errorDivName = signal(false);
+  errorDivLName = signal(false);
+  errorDivPhone = signal(false);
+  errorDivManager = signal(true);
 
-  
-  constructor(private service: ContactService,
-    private formBuilder: FormBuilder,
-    private router: Router) { }
+  newContact = signal({ phoneNumber: "" } as Contact);
+
 
   ngOnInit(): void {
 
-    this.newContact.phoneNumber = "";
     this.loadTeamMmbers();
   }
 
@@ -44,53 +38,57 @@ export class AddcontactComponent implements OnInit {
      this.service.getAllTeamMembersList()
       .subscribe(data => {
 
-        this.members = data;
+        this.members.set(data);
         console.log(data);
 
       }
       );
 
   }
+
+  updateContact(changes: Partial<Contact>) {
+
+    this.newContact.update(contact => ({ ...contact, ...changes }));
+  }
+
   onSubmit(form: any) {
 
-        
-    this.newContact.id =0;
-    console.log(this.newContact);
-    this.service.addNewContact(this.newContact).subscribe(res => {
-        
+
+    this.updateContact({ id: 0 });
+    console.log(this.newContact());
+    this.service.addNewContact(this.newContact()).subscribe(res => {
+
     });
 
-  
+
    window.location.reload();
 
 
   }
     setSelectedManager(e: any) {
-      this.selectedTeamMember = e;
-      this.errorDivManager = false;
-      this.newContact.directBossId = this.selectedTeamMember;
-      console.log(this.selectedTeamMember);
-  
+      this.errorDivManager.set(false);
+      this.updateContact({ directBossId: e });
+      console.log(e);
+
     }
 
     setSelectedGender(e: any){
-      this.selectedGender = e;
-      this.newContact.gender = this.selectedGender;
-      console.log(this.selectedGender);
+      this.updateContact({ gender: e });
+      console.log(e);
 
     }
     setNameError(){
 
-      this.errorDivName = true;
+      this.errorDivName.set(true);
     }
     setLNameError(){
 
-      this.errorDivLName = true;
+      this.errorDivLName.set(true);
     }
     checkPhone()
     {
 
-      this.errorDivPhone = true;
+      this.errorDivPhone.set(true);
     }
 
 }

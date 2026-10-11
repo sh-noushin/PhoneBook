@@ -1,82 +1,68 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, ViewChild, OnInit } from '@angular/core';
-import { MatSort, Sort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { ContactService } from 'src/app/_sevices/contact.service';
+import { Component, OnInit, ChangeDetectionStrategy, computed, inject, signal } from '@angular/core';
+import { Sort } from '@angular/material/sort';
+import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
-import { MatPaginator } from '@angular/material/paginator';
-import { ContactWithDetailsFilter } from 'src/app/_models/contactwithdetailsfilter';
-import { MatInput } from '@angular/material/input';
+import { ContactService } from '../../_sevices/contact.service';
+import { ContactWithDetails } from '../../_models/contactwithdetails';
+import { ContactWithDetailsFilter } from '../../_models/contactwithdetailsfilter';
 
 
 
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+    selector: 'app-home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 
 export class HomeComponent implements OnInit {
 
-  displayedColumns: string[] = ['Id', 'Name', 'LName', 'Gender', 'PhoneNumber', 'TeamName', 'DirectBossFullName', 'Options'];
-  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
-  filterIsActiv: boolean = false;
-  skipCount = 0;
-  totalRows = 0;
-  pageSize = 5;
-  currentPage = 0;
-  pageSizeOptions: number[] = [5, 10, 25, 100];
-  sortingElement: string = 'Id asc';
+  private _liveAnnouncer = inject(LiveAnnouncer);
+  private service = inject(ContactService);
+  private router = inject(Router);
 
-  filterText: string = "";
+  readonly displayedColumns: string[] = ['Id', 'Name', 'LName', 'Gender', 'PhoneNumber', 'TeamName', 'DirectBossFullName', 'Options'];
+  readonly pageSizeOptions: number[] = [5, 10, 25, 100];
 
-  filter = {
+  contacts = signal<ContactWithDetails[]>([]);
+  totalRows = signal(0);
+  pageSize = signal(5);
+  currentPage = signal(0);
+  sortingElement = signal('Id asc');
+
+  filterText = signal("");
+  filter = signal({
 
     name: "",
     lName: "",
     teamName: "",
 
+  } as ContactWithDetailsFilter);
 
-  } as ContactWithDetailsFilter;
-  anyFilter: string = "";
-  name: string = "";
-  lName: string = "";
-  teamName: string = "";
+  skipCount = computed(() => this.currentPage() * this.pageSize());
+  filterIsActiv = computed(() => {
+    const filter = this.filter();
+    return !!(filter.name || filter.lName || filter.teamName || this.filterText());
+  });
 
-
-  @ViewChild('paginator') paginator!: MatPaginator;
-  @ViewChild(MatSort) sorting = new MatSort();
-
-  constructor(private _liveAnnouncer: LiveAnnouncer,
-    private service: ContactService,
-    private router: Router
-  ) {
-
-  }
-
-
-  ngAfterViewInit() {
-
-    this.dataSource.sort = this.sorting;
-  }
 
   ngOnInit(): void {
 
-
     this.getContactsAnyFilter();
-    this.dataSource.sort = this.sorting;
 
   }
 
 
   getContactsAnyFilter() {
 
-    this.service.getContactWithAnyFilter(this.filterText, this.skipCount, this.pageSize, this.sortingElement).subscribe(data => {
+    this.service.getContactWithAnyFilter(this.filterText(), this.skipCount(), this.pageSize(), this.sortingElement()).subscribe(data => {
 
       console.log(data);
-      this.totalRows = data.totalCount;
-      this.dataSource = new MatTableDataSource(data.items);
+      this.totalRows.set(data.totalCount);
+      this.contacts.set(data.items);
 
     }
 
@@ -86,12 +72,12 @@ export class HomeComponent implements OnInit {
 
   getContactsWithSpecificFilter() {
 
-    console.log(this.filter);
-    this.service.getContactWithSpecificFilter(this.filter, this.skipCount, this.pageSize, this.sortingElement).subscribe(data => {
+    console.log(this.filter());
+    this.service.getContactWithSpecificFilter(this.filter(), this.skipCount(), this.pageSize(), this.sortingElement()).subscribe(data => {
 
       console.log(data);
-      this.totalRows = data.totalCount;
-      this.dataSource = new MatTableDataSource(data.items);
+      this.totalRows.set(data.totalCount);
+      this.contacts.set(data.items);
 
     }
 
@@ -99,9 +85,9 @@ export class HomeComponent implements OnInit {
 
   }
 
-  onEdit(contact: any) {
+  onEdit(contact: ContactWithDetails) {
 
-    this.service.selectedRow = contact.id;
+    this.service.selectedRow.set(contact.id);
     this.router.navigate(["/editcontact"]);
     this.getContactsAnyFilter();
 
@@ -120,17 +106,12 @@ export class HomeComponent implements OnInit {
 
   }
 
-  onSortChanged(sortState: any) {
+  onSortChanged(sortState: Sort) {
 
     if (sortState.direction) {
       this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-      this.sortingElement = sortState.active + ' ' + sortState.direction;
-      this.paginator.pageIndex = 0;
-      this.currentPage = this.paginator.pageIndex;
-
-      this.pageSize = this.paginator.pageSize;
-      this.skipCount = this.currentPage * this.pageSize;
-      this.paginator.firstPage();
+      this.sortingElement.set(sortState.active + ' ' + sortState.direction);
+      this.currentPage.set(0);
       this.getContactsAnyFilter();
 
     } else {
@@ -138,77 +119,42 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  applyFilter(event: Event) {
+  applyFilter(filterText: string) {
 
-    this.showOrHideClearFilterBtn();
-    this.filterText = (event.target as HTMLInputElement).value;
+    this.filterText.set(filterText);
     this.getContactsAnyFilter();
 
   }
-  applyFilterName(event: Event) {
 
+  applySpecificFilter(changes: Partial<ContactWithDetailsFilter>) {
 
-    this.filter.name = (event.target as HTMLInputElement).value;
-    this.name = (event.target as HTMLInputElement).value;
-
+    this.filter.update(filter => ({ ...filter, ...changes }));
     this.getContactsWithSpecificFilter();
-    this.showOrHideClearFilterBtn();
-  }
-  applyFilterLName(event: Event) {
 
-
-    this.filter.lName = (event.target as HTMLInputElement).value;
-    this.lName = (event.target as HTMLInputElement).value;
-
-    this.getContactsWithSpecificFilter();
-    this.showOrHideClearFilterBtn();
-  }
-  applyFilterTeam(event: Event) {
-
-
-    this.filter.teamName = (event.target as HTMLInputElement).value;
-    this.teamName = (event.target as HTMLInputElement).value;
-
-    this.name = (event.target as HTMLInputElement).value;
-
-    this.getContactsWithSpecificFilter();
-    this.showOrHideClearFilterBtn();
   }
 
-  pageChanged(event: any) {
-    if (this.pageSize != event.pageSize) {
-      this.paginator.pageIndex = 0;
-      this.pageSize = event.pageSize;
-      this.currentPage = this.paginator.pageIndex;
-      this.paginator.firstPage();
+  pageChanged(event: PageEvent) {
+    if (this.pageSize() != event.pageSize) {
+      this.pageSize.set(event.pageSize);
+      this.currentPage.set(0);
     }
     else {
-      this.currentPage = event.pageIndex;
+      this.currentPage.set(event.pageIndex);
 
     }
-    this.skipCount = this.currentPage * this.pageSize;
     this.getContactsAnyFilter();
-  }
-
-  showOrHideClearFilterBtn() {
-    if (this.filter.name || this.filter.lName || this.filter.teamName || this.filterText) {
-      this.filterIsActiv = true;
-    }
   }
 
   clearFilters() {
 
     this.emptyFilters();
-    this.filterIsActiv = false;
     this.getContactsAnyFilter();
 
 
   }
   emptyFilters() {
-    this.filterText = "";
-    this.filter.name = "";
-    this.filter.lName = "";
-    this.filter.teamName = "";
+    this.filterText.set("");
+    this.filter.update(filter => ({ ...filter, name: "", lName: "", teamName: "" }));
   }
 
 }

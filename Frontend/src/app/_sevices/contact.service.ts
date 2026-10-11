@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Contact } from '../_models/contact';
@@ -10,10 +10,10 @@ import { ContactWithDetailsFilter } from '../_models/contactwithdetailsfilter';
 })
 export class ContactService {
 
-  constructor(private http: HttpClient) { }
+  private http = inject(HttpClient);
 
   readonly APIUrl = 'https://localhost:7279/';
-  selectedRow : number = 0;
+  selectedRow = signal(0);
 
     
   getContactWithAnyFilter(filterText: string, skipCount: number, maxResultCount: number, sorting: string): Observable<any> {
