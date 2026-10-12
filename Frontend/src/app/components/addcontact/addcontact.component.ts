@@ -1,4 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { DirectBoss } from '../../_models/manager';
 import { ContactService } from '../../_sevices/contact.service';
 import { Contact } from '../../_models/contact';
@@ -10,19 +12,18 @@ import { Contact } from '../../_models/contact';
 @Component({
     selector: 'app-addcontact',
     templateUrl: './addcontact.component.html',
-    styleUrls: ['./addcontact.component.css'],
+    styleUrls: ['./addcontact.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AddcontactComponent implements OnInit {
 
   private service = inject(ContactService);
+  private router = inject(Router);
 
   members = signal<DirectBoss[]>([]);
-  errorDivName = signal(false);
-  errorDivLName = signal(false);
-  errorDivPhone = signal(false);
-  errorDivManager = signal(true);
+  saving = signal(false);
+  saveFailed = signal(false);
 
   newContact = signal({ phoneNumber: "" } as Contact);
 
@@ -51,22 +52,26 @@ export class AddcontactComponent implements OnInit {
     this.newContact.update(contact => ({ ...contact, ...changes }));
   }
 
-  onSubmit(form: any) {
+  onSubmit(form: NgForm) {
 
+    if (form.invalid || this.saving()) {
+      return;
+    }
 
     this.updateContact({ id: 0 });
     console.log(this.newContact());
-    this.service.addNewContact(this.newContact()).subscribe(res => {
-
+    this.saving.set(true);
+    this.saveFailed.set(false);
+    this.service.addNewContact(this.newContact()).subscribe({
+      next: () => this.router.navigate(['/']),
+      error: () => {
+        this.saving.set(false);
+        this.saveFailed.set(true);
+      }
     });
-
-
-   window.location.reload();
-
 
   }
     setSelectedManager(e: any) {
-      this.errorDivManager.set(false);
       this.updateContact({ directBossId: e });
       console.log(e);
 
@@ -76,19 +81,6 @@ export class AddcontactComponent implements OnInit {
       this.updateContact({ gender: e });
       console.log(e);
 
-    }
-    setNameError(){
-
-      this.errorDivName.set(true);
-    }
-    setLNameError(){
-
-      this.errorDivLName.set(true);
-    }
-    checkPhone()
-    {
-
-      this.errorDivPhone.set(true);
     }
 
 }

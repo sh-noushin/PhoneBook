@@ -13,7 +13,7 @@ import { ContactWithDetailsFilter } from '../../_models/contactwithdetailsfilter
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
-    styleUrls: ['./home.component.css'],
+    styleUrls: ['./home.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
@@ -29,6 +29,7 @@ export class HomeComponent implements OnInit {
 
   contacts = signal<ContactWithDetails[]>([]);
   totalRows = signal(0);
+  loadFailed = signal(false);
   pageSize = signal(5);
   currentPage = signal(0);
   sortingElement = signal('Id asc');
@@ -58,30 +59,48 @@ export class HomeComponent implements OnInit {
 
   getContactsAnyFilter() {
 
-    this.service.getContactWithAnyFilter(this.filterText(), this.skipCount(), this.pageSize(), this.sortingElement()).subscribe(data => {
+    this.service.getContactWithAnyFilter(this.filterText(), this.skipCount(), this.pageSize(), this.sortingElement()).subscribe({
+      next: data => {
 
-      console.log(data);
-      this.totalRows.set(data.totalCount);
-      this.contacts.set(data.items);
+        console.log(data);
+        this.totalRows.set(data.totalCount);
+        this.contacts.set(data.items);
+        this.loadFailed.set(false);
 
-    }
-
-    );
+      },
+      error: () => this.showLoadFailure()
+    });
 
   }
 
   getContactsWithSpecificFilter() {
 
     console.log(this.filter());
-    this.service.getContactWithSpecificFilter(this.filter(), this.skipCount(), this.pageSize(), this.sortingElement()).subscribe(data => {
+    this.service.getContactWithSpecificFilter(this.filter(), this.skipCount(), this.pageSize(), this.sortingElement()).subscribe({
+      next: data => {
 
-      console.log(data);
-      this.totalRows.set(data.totalCount);
-      this.contacts.set(data.items);
+        console.log(data);
+        this.totalRows.set(data.totalCount);
+        this.contacts.set(data.items);
+        this.loadFailed.set(false);
 
-    }
+      },
+      error: () => this.showLoadFailure()
+    });
 
-    );
+  }
+
+  showLoadFailure() {
+
+    this.totalRows.set(0);
+    this.contacts.set([]);
+    this.loadFailed.set(true);
+
+  }
+
+  initials(contact: ContactWithDetails) {
+
+    return ((contact.name?.[0] ?? '') + (contact.lName?.[0] ?? '')).toUpperCase();
 
   }
 

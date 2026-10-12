@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Contact } from '../../_models/contact';
 import { DirectBoss } from '../../_models/manager';
@@ -7,7 +8,7 @@ import { ContactService } from '../../_sevices/contact.service';
 @Component({
     selector: 'app-editcontact',
     templateUrl: './editcontact.component.html',
-    styleUrls: ['./editcontact.component.css'],
+    styleUrls: ['./editcontact.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
@@ -18,9 +19,8 @@ export class EditcontactComponent implements OnInit {
 
   members = signal<DirectBoss[]>([]);
   contact = signal({} as Contact);
-  errorDivName = signal(false);
-  errorDivLName = signal(false);
-  errorDivPhone = signal(false);
+  saving = signal(false);
+  saveFailed = signal(false);
 
 
   ngOnInit(): void {
@@ -68,40 +68,24 @@ export class EditcontactComponent implements OnInit {
 
   }
 
-  onSubmit(form: any) {
+  onSubmit(form: NgForm) {
 
-    if (this.contact().name == "") {
-      this.errorDivLName.set(true);
+    if (form.invalid || this.saving()) {
+      return;
     }
-    if (this.contact().lName == "") {
-      this.errorDivPhone.set(true);
-    }
-    else {
-      console.log(this.contact());
-      this.service.editContct(this.contact()).subscribe(res => {
+
+    console.log(this.contact());
+    this.saving.set(true);
+    this.saveFailed.set(false);
+    this.service.editContct(this.contact()).subscribe({
+      next: res => {
         console.log(res);
-      });
-
-      this.router.navigate(['/'])
-      .then(() => {
-        window.location.reload();
-      });
-
-    }
-  }
-
-
-
-  setNameError() {
-
-    this.errorDivName.set(true);
-  }
-  setLNameError() {
-
-    this.errorDivLName.set(true);
-  }
-  checkPhone() {
-
-    this.errorDivPhone.set(true);
+        this.router.navigate(['/']);
+      },
+      error: () => {
+        this.saving.set(false);
+        this.saveFailed.set(true);
+      }
+    });
   }
 }

@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -14,6 +14,10 @@ import { EditcontactComponent } from './components/editcontact/editcontact.compo
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSortModule} from '@angular/material/sort';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 
@@ -25,7 +29,7 @@ import {MatSortModule} from '@angular/material/sort';
         EditcontactComponent
     ],
     bootstrap: [AppComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA,], imports: [BrowserModule,
+    imports: [BrowserModule,
         AppRoutingModule,
         MatTableModule,
         MatIconModule,
@@ -34,7 +38,11 @@ import {MatSortModule} from '@angular/material/sort';
         ReactiveFormsModule,
         MatPaginatorModule,
         MatButtonModule,
-        MatSortModule], providers: [
+        MatSortModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatTooltipModule], providers: [
         provideHttpClient(withXhr(), withInterceptorsFromDi())
     ] })
 export class AppModule { }

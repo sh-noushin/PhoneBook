@@ -1,4 +1,196 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'sass:string';
+@use '@angular/material' as mat;
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+$font-plain: string.unquote("'Inter', 'Segoe UI', system-ui, sans-serif");
+$font-brand: string.unquote("'Plus Jakarta Sans', 'Inter', system-ui, sans-serif");
+
+:root {
+  --pb-bg: #f3f6f6;
+  --pb-surface: #ffffff;
+  --pb-surface-muted: #f8fafa;
+  --pb-border: #e3e9e8;
+  --pb-border-strong: #c5d0ce;
+  --pb-text: #14201f;
+  --pb-muted: #5c6b69;
+  --pb-danger: #b3261e;
+  --pb-radius: 18px;
+  --pb-shadow: 0 1px 2px rgb(15 35 33 / 5%), 0 12px 32px -16px rgb(15 35 33 / 18%);
+  --pb-font-brand: #{$font-brand};
+}
+
+html {
+  color-scheme: light;
+  scrollbar-gutter: stable;
+
+  @include mat.theme((
+    color: mat.$cyan-palette,
+    typography: (
+      plain-family: $font-plain,
+      brand-family: $font-brand,
+      bold-weight: 700,
+      medium-weight: 600,
+      regular-weight: 400,
+    ),
+    density: 0,
+  ));
+
+  @include mat.table-overrides((
+    background-color: transparent,
+    row-item-outline-color: var(--pb-border),
+  ));
+
+  @include mat.paginator-overrides((
+    container-background-color: transparent,
+  ));
+
+  @include mat.form-field-overrides((
+    outlined-container-shape: 12px,
+    outlined-outline-color: var(--pb-border-strong),
+  ));
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(1200px 420px at 50% -180px, color-mix(in srgb, var(--mat-sys-primary) 14%, transparent), transparent 70%),
+    var(--pb-bg);
+  background-attachment: fixed;
+  color: var(--pb-text);
+  font-family: $font-plain;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+// Page layout shared by every routed view
+
+.page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 40px 24px 72px;
+
+  &--narrow {
+    max-width: 760px;
+  }
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    font-family: $font-brand;
+    font-size: clamp(26px, 3vw, 34px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+}
+
+.page-subtitle {
+  margin: 6px 0 0;
+  color: var(--pb-muted);
+}
+
+.card {
+  background: var(--pb-surface);
+  border: 1px solid var(--pb-border);
+  border-radius: var(--pb-radius);
+  box-shadow: var(--pb-shadow);
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 20px;
+  color: var(--pb-muted);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 120ms ease;
+
+  mat-icon {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+  }
+
+  &:hover {
+    color: var(--mat-sys-primary);
+  }
+}
+
+// Add / edit contact forms
+
+.form-card {
+  padding: 28px;
+}
+
+.form-section-title {
+  margin: 0 0 18px;
+  color: var(--pb-muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 20px;
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  .form-grid__full {
+    grid-column: 1 / -1;
+  }
+}
+
+.form-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--pb-danger) 8%, transparent);
+  color: var(--pb-danger);
+  font-size: 14px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--pb-border);
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 24px 16px 56px;
+  }
+
+  .form-card {
+    padding: 20px;
+  }
+
+  .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

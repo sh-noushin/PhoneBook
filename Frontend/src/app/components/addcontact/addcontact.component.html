@@ -1,82 +1,85 @@
-<form #formControl="ngForm" (ngSubmit)="onSubmit(formControl.value)" style="align-items: center; margin-left: 300px;">
+<section class="page page--narrow">
+  <a class="back-link" routerLink="/">
+    <mat-icon>arrow_back</mat-icon>
+    Back to contacts
+  </a>
 
+  <header class="page-header">
+    <div>
+      <h1>New contact</h1>
+      <p class="page-subtitle">Add someone to your phone book.</p>
+    </div>
+  </header>
 
-  <div class="form">
-    <mat-form-field color="accent">
-      <input matInput #input class="form-control" placeholder=" Name" required type="text"
-        [ngModel]="newContact().name" (ngModelChange)="updateContact({ name: $event })"
-        name="name" (click)="setNameError()">
+  <form class="card form-card" #formControl="ngForm" (ngSubmit)="onSubmit(formControl)" novalidate>
+    <h2 class="form-section-title">Contact details</h2>
 
-    </mat-form-field>
-  </div>
-  <div class="form" style="margin-top: 20px;">
-    <mat-form-field color="accent">
-      <input matInput #input class="form-control" placeholder="Last Name" required type="text"
-        [ngModel]="newContact().lName" (ngModelChange)="updateContact({ lName: $event })"
-        name="lName" (click)="setLNameError()">
-    </mat-form-field>
-  </div>
+    <div class="form-grid">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Name</mat-label>
+        <input matInput required type="text" name="name" #nameField="ngModel"
+          [ngModel]="newContact().name" (ngModelChange)="updateContact({ name: $event })">
+        @if (nameField.hasError('required')) {
+          <mat-error>Name could not be empty</mat-error>
+        }
+      </mat-form-field>
 
-  <mat-label style="margin-top: 15px;"> Gender</mat-label>
-  <div class="form">
-    <mat-form-field color="accent" style="margin-top: 30px;">
-      <select matNativeControl name="selectgender"
-        [ngModel]="newContact().gender" (ngModelChange)="setSelectedGender($event)">
-        <option [ngValue]="null" disabled selected>Choose a Gender</option>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Last name</mat-label>
+        <input matInput required type="text" name="lName" #lNameField="ngModel"
+          [ngModel]="newContact().lName" (ngModelChange)="updateContact({ lName: $event })">
+        @if (lNameField.hasError('required')) {
+          <mat-error>Last name could not be empty</mat-error>
+        }
+      </mat-form-field>
 
-        <option value="Man" selected>Man</option>
-        <option value="Woman">Woman</option>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Gender</mat-label>
+        <mat-select name="selectgender"
+          [ngModel]="newContact().gender" (ngModelChange)="setSelectedGender($event)">
+          <mat-option value="Man">Man</mat-option>
+          <mat-option value="Woman">Woman</mat-option>
+        </mat-select>
+      </mat-form-field>
 
-      </select>
-    </mat-form-field>
-  </div>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Phone number</mat-label>
+        <mat-icon matPrefix>call</mat-icon>
+        <input matInput required type="text" name="phone" placeholder="+1 (232) 86867667" #phoneField="ngModel"
+          pattern="^\+?\d{1,3}[\s]\(?\d{2,5}\)?[\s]\d{3,15}$"
+          [ngModel]="newContact().phoneNumber" (ngModelChange)="updateContact({ phoneNumber: $event })">
+        <mat-hint>For example +1 232 86867667</mat-hint>
+        @if (phoneField.hasError('required')) {
+          <mat-error>Phone number must be entered</mat-error>
+        } @else if (phoneField.hasError('pattern')) {
+          <mat-error>Enter country code, area code and number, separated by spaces</mat-error>
+        }
+      </mat-form-field>
 
-  <div class="form" style="margin-top: 20px;">
+      <mat-form-field class="form-grid__full" appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Manager</mat-label>
+        <mat-select required name="selectmanager" #managerField="ngModel"
+          [ngModel]="newContact().directBossId" (ngModelChange)="setSelectedManager($event)">
+          @for (x of members(); track x.id) {
+            <mat-option [value]="x.id">{{x.fullName}}</mat-option>
+          }
+        </mat-select>
+        @if (managerField.hasError('required')) {
+          <mat-error>Manager must be selected</mat-error>
+        }
+      </mat-form-field>
+    </div>
 
-    <mat-form-field color="accent">
-      <input matInput #input class="form-control" placeholder="+1 (232) 86867667" type="text"
-        [ngModel]="newContact().phoneNumber" (ngModelChange)="updateContact({ phoneNumber: $event })"
-        required
-        pattern="^\+?\d{1,3}[\s]\(?\d{2,5}\)?[\s]\d{3,15}$"
-        name="phone"
-        (click)="checkPhone()">
-
-    </mat-form-field>
-  </div>
-
-  <mat-label style="margin-top: 15px;" style="margin-top: 30px;"> Manager</mat-label>
-
-  <div>
-
-    <select matNativeControl name="selectmanager" required
-      [ngModel]="newContact().directBossId" (ngModelChange)="setSelectedManager($event)">
-      <option [ngValue]="null" disabled selected>Choose a Manager</option>
-      @for (x of members(); track x.id) {
-        <option [value]="x.id" required>
-        {{x.fullName}}</option>
-      }
-
-    </select>
-    @if (errorDivManager()) {
-      <div style="color: red; margin-top: 20px; margin-bottom: 20px;">
-        <p>Manager must be selected</p>
-      </div>
+    @if (saveFailed()) {
+      <p class="form-error" role="alert">
+        <mat-icon>error_outline</mat-icon>
+        The contact could not be saved. Check the details and try again.
+      </p>
     }
-  </div>
 
-  <div mat-dialog-actions>
-    <button class="m-3" mat-raised-button color="primary" type="submit" [disabled]="!formControl.valid"
-    style="margin-top: 15px;">Save</button>
-    @if ((!errorDivName() || !errorDivLName()) && !formControl.valid) {
-      <div style="color: red; margin-top: 20px; margin-bottom: 20px;">
-        <p>-Name and Last Name could not be empty</p>
-      </div>
-    }
-    @if (!formControl.valid) {
-      <div style="color: red; margin-top: 20px; margin-bottom: 20px;">
-        <p>-Phone Numebr must be entered in these format:</p>
-        <p>counry code , space , area code[2-5 digits], space ,phone number[3-15 digits]</p>
-      </div>
-    }
-  </div>
-</form>
+    <div class="form-actions">
+      <a mat-button routerLink="/">Cancel</a>
+      <button mat-flat-button type="submit" [disabled]="!formControl.valid || saving()">Save</button>
+    </div>
+  </form>
+</section>
